@@ -37,7 +37,7 @@ export class AuthService {
     //}
   }
 
-/*   async signout(userId: string, res: Response): Promise<void> {
+/*   async signout(userId: number, res: Response): Promise<void> {
     const user = await this.usersService.findById(userId)
     await this.usersService.update(user.id, { refresh_token: null })
     try {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req, UseGuards } from '@nestjs/common';
 import { Public } from 'src/decorators/public.decorator';
 import { User } from 'src/entities/user.entity';
 import { RequestWithUser } from 'src/interfaces/auth.interface';
@@ -24,4 +24,11 @@ export class AuthController {
   async login(@Req() req: RequestWithUser, @Res() res: Response):Promise<void> {
     return this.authService.login(req.user, res);
   }
+
+/*   @UseGuards(JwtAuthGuard)
+  @Post('signout')
+  @HttpCode(HttpStatus.OK)
+  async signout(@GetCurrentUserId() userid: string, @Res() res: Response): Promise<void> {
+    return this.authService.signout(userid, res)
+  } */
 }
