@@ -1,17 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
+import { AbstractService } from 'src/modules/common/abstract.service';
 import { compareHash, hash } from 'src/modules/utils/bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UsersService extends AbstractService {
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
-  ) {}
+    private readonly usersRepository: Repository<User>) {
+      super(usersRepository)
+    }
   
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = await this.findBy({ email: createUserDto.email })
@@ -26,7 +28,7 @@ export class UsersService {
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+/*   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = (await this.findById(id)) as User
     const { email, password, confirm_password, role_id, ...data } = updateUserDto
     if (user.email !== email && email) {
@@ -49,5 +51,5 @@ export class UsersService {
   async updateUserImageId(id: string, avatar: string): Promise<User> {
     const user = await this.findById(id)
     return this.update(user.id, { avatar })
-  }
+  } */
 }

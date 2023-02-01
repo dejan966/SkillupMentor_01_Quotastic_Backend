@@ -36,4 +36,15 @@ export class AuthService {
     //  throw new InternalServerErrorException('Something went wrong while setting cookies into response header')
     //}
   }
+
+/*   async signout(userId: string, res: Response): Promise<void> {
+    const user = await this.usersService.findById(userId)
+    await this.usersService.update(user.id, { refresh_token: null })
+    try {
+      res.setHeader('Set-Cookie', this.getCookiesForSignOut()).sendStatus(200)
+    } catch (error) {
+      Logging.error(error)
+      throw new InternalServerErrorException('Something went wrong while setting cookies into response header')
+    }
+  } */
 }

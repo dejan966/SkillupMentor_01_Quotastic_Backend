@@ -13,9 +13,6 @@ export class CreateUserDto {
   email: string
 
   @IsNotEmpty()
-  role_id: string
-
-  @IsNotEmpty()
   @Matches(/^(?=.*\d)[A-Za-z.\s_-]+[\w~@#$%^&+=`|{}:;!.?"()[\]-]{6,}/, {
     message:
       'Password must have atleast one number, lower or upper case letter and it has to be longer than five characters',
