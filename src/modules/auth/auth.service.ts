@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { hash } from '../utils/bcrypt';
-import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
@@ -17,7 +16,6 @@ export class AuthService {
   async register(registerUserDto: RegisterUserDto): Promise<User> {
     const hashedPassword: string = await hash(registerUserDto.password)
     const user = await this.usersService.create({
-      role_id: null,
       ...registerUserDto,
       password: hashedPassword,
     })
