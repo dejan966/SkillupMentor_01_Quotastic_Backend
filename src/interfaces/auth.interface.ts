@@ -3,7 +3,7 @@ import { User } from '../entities/user.entity'
 
 export interface TokenPayload {
   name: string
-  sub: string
+  sub: number
   type: JwtType
 }
 

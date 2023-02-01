@@ -1,6 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
+import { PostgresErrorCode } from 'src/helpers/postgresErrorCode.enum';
+import Logging from 'src/library/Logging';
 import { AbstractService } from 'src/modules/common/abstract.service';
 import { compareHash, hash } from 'src/modules/utils/bcrypt';
 import { Repository } from 'typeorm';
@@ -44,6 +46,18 @@ export class UsersService extends AbstractService {
         throw new BadRequestException('New password cannot be the same as old password')
       }
       user.password = await hash(password)
+    }
+    try {
+      Object.entries(data).map((entry) => {
+        user[entry[0]] = entry[1]
+      })
+      return this.usersRepository.save(user)
+    } catch (error) {
+      Logging.error(error)
+      if (error?.code === PostgresErrorCode.UniqueViolation) {
+        throw new BadRequestException('User with that email alread exists')
+      }
+      throw new InternalServerErrorException('Something went wrong while updating the user')
     }
     
   }

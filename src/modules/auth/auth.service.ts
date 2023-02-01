@@ -1,8 +1,11 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/entities/user.entity';
+import { Request, Response } from 'express'
 import { PostgresErrorCode } from 'src/helpers/postgresErrorCode.enum';
 import { CookieType, JwtType, TokenPayload } from 'src/interfaces/auth.interface';
+import { UserData } from 'src/interfaces/user.interface';
 import Logging from 'src/library/Logging';
 import { UsersService } from 'src/users/users.service';
 import { compareHash, hash } from '../utils/bcrypt';
@@ -54,7 +57,7 @@ export class AuthService {
   }
 
   async refreshTokens(req: Request): Promise<User> {
-    const user = await this.usersService.findBy({ refresh_token: req.cookies.refresh_token }, ['role'])
+    const user = await this.usersService.findBy({ refresh_token: req.cookies.refresh_token })
     if (!user) {
       throw new ForbiddenException()
     }
@@ -109,7 +112,7 @@ export class AuthService {
     }
   }
 
-  async generateToken(userId: string, email: string, type: JwtType): Promise<string> {
+  async generateToken(userId: number, email: string, type: JwtType): Promise<string> {
     try {
       const payload: TokenPayload = { sub: userId, name: email, type }
       let token: string
@@ -166,7 +169,7 @@ export class AuthService {
     return ['access_token=${token}; HttpOnly; Path =/; Max-Age=;', 'refresh_token=; HttpOnly; Path =/; Max-Age=0']
   }
 
-  async getUserId(request: Request): Promise<string> {
+  async getUserId(request: Request): Promise<number> {
     const user = request.user as User
     return user.id
   }

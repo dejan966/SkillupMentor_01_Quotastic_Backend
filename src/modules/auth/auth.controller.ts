@@ -3,8 +3,8 @@ import { Public } from 'src/decorators/public.decorator';
 import { User } from 'src/entities/user.entity';
 import { RequestWithUser } from 'src/interfaces/auth.interface';
 import { AuthService } from './auth.service';
-import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { JwtAuthGuard } from './guards/jwt.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)

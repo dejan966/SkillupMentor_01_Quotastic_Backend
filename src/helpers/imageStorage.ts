@@ -1,6 +1,6 @@
-const FileType = import('file-type')
+/* const FileType = import('file-type')
 import fs from 'fs'
-import Logging from 'library/Logging'
+import Logging from '../library/Logging'
 import { diskStorage, Options } from 'multer'
 import { extname } from 'path'
 
@@ -46,3 +46,4 @@ export const removeFile = (fullFilePath: string): void => {
     Logging.error(error)
   }
 }
+ */
