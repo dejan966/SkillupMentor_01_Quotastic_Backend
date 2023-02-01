@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req, UseGuards } from '@nestjs/common';
+import { GetCurrentUserId } from 'src/decorators/get-current-user-id.decorator';
 import { Public } from 'src/decorators/public.decorator';
 import { User } from 'src/entities/user.entity';
 import { RequestWithUser } from 'src/interfaces/auth.interface';
