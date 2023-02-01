@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'src/entities/user.entity';
+import Logging from 'src/library/Logging';
 import { UsersService } from 'src/users/users.service';
 import { hash } from '../utils/bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -37,7 +38,7 @@ export class AuthService {
     //}
   }
 
-/*   async signout(userId: number, res: Response): Promise<void> {
+  async signout(userId: number, res: Response): Promise<void> {
     const user = await this.usersService.findById(userId)
     await this.usersService.update(user.id, { refresh_token: null })
     try {
@@ -46,5 +47,5 @@ export class AuthService {
       Logging.error(error)
       throw new InternalServerErrorException('Something went wrong while setting cookies into response header')
     }
-  } */
+  }
 }
