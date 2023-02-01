@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req, UseGuards, Get } from '@nestjs/common';
 import { GetCurrentUserId } from 'src/decorators/get-current-user-id.decorator';
 import { Public } from 'src/decorators/public.decorator';
+import { Response } from 'express'
 import { User } from 'src/entities/user.entity';
 import { RequestWithUser } from 'src/interfaces/auth.interface';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
+import { UserData } from 'src/interfaces/user.interface';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -31,5 +34,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async signout(@GetCurrentUserId() userid: number, @Res() res: Response): Promise<void> {
     return this.authService.signout(userid, res)
+  }
+  
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getCurrentUser(@GetCurrentUser() user: User): Promise<UserData> {
+    return {
+      id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      avatar: user.avatar,  
+    }
   }
 }
