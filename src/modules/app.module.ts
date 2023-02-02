@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
+import { VotesModule } from './votes/votes.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { JwtAuthGuard } from './auth/guards/jwt.guard';
     DatabaseModule,
     UsersModule,
     AuthModule,
-    QuotesModule
+    QuotesModule,
+    VotesModule
   ],
   controllers: [AppController],
   providers: [
