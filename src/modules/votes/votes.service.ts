@@ -17,8 +17,8 @@ export class VotesService extends AbstractService {
 
   async create(createVoteDto: CreateVoteDto) {
     try {
-      const role = this.votesRepository.create({ ...createVoteDto })
-      return this.votesRepository.save(role)
+      const vote = this.votesRepository.create({ ...createVoteDto })
+      return this.votesRepository.save(vote)
     } catch (error) {
       Logging.error(error)
       throw new BadRequestException('Something went wrong while casting a vote')
@@ -32,7 +32,6 @@ export class VotesService extends AbstractService {
 
   async update(id: number, updateVoteDto: UpdateVoteDto) : Promise<Vote> {
     const vote = (await this.findById(id)) as unknown as Vote
-
     try {
       vote.upvote = updateVoteDto.upvote
       vote.downvote = updateVoteDto.downvote
