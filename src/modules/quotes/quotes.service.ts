@@ -1,34 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from 'src/entities/quote.entity';
+import Logging from 'src/library/Logging';
 import { Repository } from 'typeorm';
+import { AbstractService } from '../common/abstract.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 
 @Injectable()
-export class QuotesService {
+export class QuotesService extends AbstractService {
   constructor(
     @InjectRepository(Quote)
     private readonly quotesRepository: Repository<Quote>,
-  ) {}
+  ) {
+    super(quotesRepository)
+  }
   
-  create(createQuoteDto: CreateQuoteDto) {
-    return 'This action adds a new quote';
+  async create(createQuoteDto: CreateQuoteDto): Promise<Quote> {
+    try {
+      const quote = this.quotesRepository.create({ ...createQuoteDto })
+      return this.quotesRepository.save(quote)
+    } catch (error) {
+      Logging.error(error)
+      throw new BadRequestException('Something went wrong while posting a quote')
+    }
   }
 
-  findAll() {
-    return `This action returns all quotes`;
+  async findAll():Promise<Quote[]> {
+    const quote = (await this.findAll()) as Quote[]
+    return this.quotesRepository.save(quote)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} quote`;
+  async findById(id: number):Promise<Quote> {
+    const quote = (await this.findById(id)) as Quote
+    return this.quotesRepository.save(quote)
   }
 
-  update(id: number, updateQuoteDto: UpdateQuoteDto) {
-    return `This action updates a #${id} quote`;
+  async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {
+    const quote = (await this.findById(id)) as Quote
+    try {
+      quote.quote = updateQuoteDto.quote;
+      return this.quotesRepository.save(quote)
+    } catch (error) {
+      Logging.error(error)
+      throw new InternalServerErrorException('Something went wrong while updating the quote')
+    } 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} quote`;
+  async remove(id: number) {
+    const quote = (await this.findById(id)) as Quote
+    return this.quotesRepository.delete(quote)
   }
 }
