@@ -6,7 +6,7 @@ export class Quote {
     @PrimaryGeneratedColumn()
     id:number;
 
-    @Column()
+    @Column({default: () => 0})
     karma:number;
 
     @Column()
