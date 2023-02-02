@@ -9,4 +9,7 @@ export class UpdateVoteDto {
 
     @IsNotEmpty()
     quote_id: number
+
+    @IsNotEmpty()
+    user_id: number
 }

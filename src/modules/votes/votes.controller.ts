@@ -22,23 +22,13 @@ export class VotesController {
     return this.votesService.create(createVoteDto);
   }
 
-  @Get()
-  findAll() {
-    return this.votesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.votesService.findById(id);
+  @Get(':user_id')
+  findOne(@Param('user_id') u_id: number) {
+    return this.votesService.findById(u_id);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateVoteDto: UpdateVoteDto) {
     return this.votesService.update(id, updateVoteDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.votesService.remove(id);
   }
 }

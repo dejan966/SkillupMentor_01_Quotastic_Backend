@@ -15,26 +15,23 @@ export class VotesService extends AbstractService {
       super(votesRepository)
     }
 
-  async create(createVoteDto: CreateVoteDto, quoteId: number ) {
+  async create(createVoteDto: CreateVoteDto) {
     try {
-      const role = this.votesRepository.create({ ...createVoteDto, quote: quoteId })
+      const role = this.votesRepository.create({ ...createVoteDto })
       return this.votesRepository.save(role)
     } catch (error) {
       Logging.error(error)
-      throw new BadRequestException('Something went wrong while creating a new role')
+      throw new BadRequestException('Something went wrong while casting a vote')
     }
   }
 
-/*   async findAll() : Promise<Vote[]> {
-    
-  } */
-
-/*   async findById(id: number) : Promise<Vote> {
-    
-  } */
+  async findById(user_id: number) : Promise<Vote[]> {
+    const votes = (await this.findById(user_id)) as Vote[]
+    return this.votesRepository.save(votes)
+  }
 
   async update(id: number, updateVoteDto: UpdateVoteDto) : Promise<Vote> {
-    const vote = (await this.findById(id)) as Vote
+    const vote = (await this.findById(id)) as unknown as Vote
 
     try {
       vote.upvote = updateVoteDto.upvote
@@ -44,9 +41,5 @@ export class VotesService extends AbstractService {
       Logging.error(error)
       throw new InternalServerErrorException('Something went wrong while updating votes')
     } 
-  }
-
-  async remove(id: number) : Promise<Vote> {
-    
   }
 }
