@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Quote } from './quote.entity';
 
