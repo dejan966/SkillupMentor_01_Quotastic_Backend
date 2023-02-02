@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Quote } from './quote.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Vote {
@@ -14,5 +15,9 @@ export class Vote {
 
     @ManyToOne(() => Quote, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'quote_id' })
-    user: Quote | null
+    quote: Quote | null
+
+    @ManyToOne(() => User, { onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'user_id' })
+    user: User | null
 }

@@ -29,7 +29,7 @@ export class VotesController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.votesService.findOne(id);
+    return this.votesService.findById(id);
   }
 
   @Patch(':id')
