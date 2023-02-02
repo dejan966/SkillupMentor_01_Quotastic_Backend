@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
@@ -13,9 +14,11 @@ export class Quote {
     quote:string;
     
     @Column({ type: 'datetime', default: () => 'NOW()' })
+    @Exclude()
     posted_when: string
 
     @ManyToOne(() => User, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_id' })
-    user: User | null
+    @Exclude()
+    user: User
 }
