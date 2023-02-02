@@ -7,7 +7,7 @@ import { PostgresErrorCode } from 'src/helpers/postgresErrorCode.enum';
 import { CookieType, JwtType, TokenPayload } from 'src/interfaces/auth.interface';
 import { UserData } from 'src/interfaces/user.interface';
 import Logging from 'src/library/Logging';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { compareHash, hash } from '../utils/bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
 
