@@ -28,22 +28,24 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
+  @HttpCode(HttpStatus.OK)
+  async findAll(): Promise<User>  {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id') id: number): Promise<User>  {
     return this.usersService.findById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<User>  {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: number): Promise<User>  {
+    return this.usersService.remove(id);
   }
 }
