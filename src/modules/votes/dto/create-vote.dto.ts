@@ -11,5 +11,5 @@ export class CreateVoteDto {
     quote_id: number
 
     @IsNotEmpty()
-    vote_id: number
+    user_id: number
 }

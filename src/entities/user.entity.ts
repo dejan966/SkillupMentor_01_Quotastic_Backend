@@ -21,7 +21,8 @@ export class User {
     @Column()
     avatar: string
 
-    @Column()
+    @Column({default:true})
+    @Exclude()
     isActive:boolean
 
     @Column({ nullable: true, default: null })

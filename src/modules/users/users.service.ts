@@ -59,11 +59,10 @@ export class UsersService extends AbstractService {
       }
       throw new InternalServerErrorException('Something went wrong while updating the user')
     }
-    
   }
 
-/*   async updateUserImageId(id: number, avatar: string): Promise<User> {
+  async updateUserImageId(id: number, avatar: string): Promise<User> {
     const user = await this.findById(id)
     return this.update(user.id, { avatar })
-  } */
+  }
 }
