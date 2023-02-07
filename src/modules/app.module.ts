@@ -1,34 +1,33 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
-import { configValidationSchema } from '../config/schema.config';
 import { UsersModule } from './users/users.module';
 import { QuotesModule } from './quotes/quotes.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
-import { VotesModule } from './votes/votes.module';
+import { AppService } from './app.service';
+import { LoggerMiddleware } from 'src/middleware/logger.middleware';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env'],
-      validationSchema: configValidationSchema,
     }),
     DatabaseModule,
     UsersModule,
     AuthModule,
     QuotesModule,
-    VotesModule
   ],
   controllers: [AppController],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+  providers: [ 
+    AppService,
   ],
 })
-export class AppModule {}
+export class AppModule {
+/*   configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
+  } */
+}

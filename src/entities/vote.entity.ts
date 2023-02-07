@@ -6,13 +6,10 @@ import { User } from './user.entity';
 @Entity()
 export class Vote {
     @PrimaryGeneratedColumn()
-    id:number;
+    id:number
 
     @Column()
-    upvote:boolean
-    
-    @Column()
-    downvote:boolean
+    value:boolean
 
     @ManyToOne(() => Quote, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'quote_id' })
