@@ -22,7 +22,7 @@ export class AuthController {
   }
 
   @Public()
-  @Post('login')
+  @Post('auth/login')
   @HttpCode(HttpStatus.OK)
   async login(@Req() req: RequestWithUser, @Res() res: Response):Promise<void> {
     return this.authService.login(req.user, res);
