@@ -4,19 +4,16 @@ import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { Quote } from 'src/entities/quote.entity';
 import { User } from 'src/entities/user.entity';
 import Logging from 'src/library/Logging';
-import { Repository } from 'typeorm';
-import { AbstractService } from '../common/abstract.service';
+import { And, Repository } from 'typeorm';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 
 @Injectable()
-export class QuotesService extends AbstractService {
+export class QuotesService{
   constructor(
     @InjectRepository(Quote)
-    private readonly quotesRepository: Repository<Quote>) 
-    { super(quotesRepository) 
-  }
-  
+    private readonly quotesRepository: Repository<Quote>){}
+    
   async create(createQuoteDto: CreateQuoteDto): Promise<Quote> {
     try {
       const quote = this.quotesRepository.create({ ...createQuoteDto })
@@ -27,18 +24,17 @@ export class QuotesService extends AbstractService {
     }
   }
 
-  async findAll():Promise<Quote[]> {
-    const quote = (await this.findAll()) as Quote[]
-    return this.quotesRepository.save(quote)
+  async findAll() {
+    return await this.quotesRepository.find()
   }
 
-  async findById(id: number):Promise<Quote> {
-    const quote = (await this.findById(id)) as Quote
-    return this.quotesRepository.save(quote)
+  async findById(quoteId: number, userData: User):Promise<Quote> {
+    const quote = await this.quotesRepository.findOne({ where: { id: quoteId, user: userData }})
+    return quote
   }
 
-  async update(quoteId: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {
-    const quote = (await this.findById(quoteId)) as Quote
+  async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {
+    const quote = await this.quotesRepository.findOne({ where: { id }})
     try {
       quote.quote = updateQuoteDto.quote;
       return this.quotesRepository.save(quote)
@@ -49,7 +45,7 @@ export class QuotesService extends AbstractService {
   }
 
   async remove(id: number) {
-    const quote = (await this.findById(id)) as Quote
+    const quote = await this.quotesRepository.findOne({ where: { id }})
     return this.quotesRepository.delete(quote)
   }
 }

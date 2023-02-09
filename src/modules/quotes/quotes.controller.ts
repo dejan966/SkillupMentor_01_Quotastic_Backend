@@ -13,6 +13,7 @@ import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
+import { User } from 'src/entities/user.entity';
 
 @Controller('quotes')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -30,8 +31,8 @@ export class QuotesController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
-    return this.quotesService.findById(id);
+  async findOne(@Param('id') quoteId: number, userData: User) {
+    return this.quotesService.findById(quoteId, userData);
   }
 
   @Patch(':id')

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { AbstractService } from '../common/abstract.service';
 
 @Injectable()
 export class VotesService {
