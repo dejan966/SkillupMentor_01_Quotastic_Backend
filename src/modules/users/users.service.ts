@@ -12,10 +12,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService{
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>) {}
+    private readonly usersRepository: Repository<User>
+  ) {}
   
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = await this.usersRepository.findBy(createUserDto.email)
+    const user = await this.findBy(createUserDto.email)
     if (user) {
       throw new BadRequestException('User with that email already exists')
     }

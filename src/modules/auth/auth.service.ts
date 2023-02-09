@@ -47,6 +47,7 @@ export class AuthService {
     const accessTokenCookie = await this.generateCookie(accessToken, CookieType.ACCESS_TOKEN)
     const refreshToken = await this.generateToken(user.id, user.email, JwtType.REFRESH_TOKEN)
     const refreshTokenCookie = await this.generateCookie(refreshToken, CookieType.REFRESH_TOKEN)
+    
     try {
       await this.updateRtHash(user.id, refreshToken)
       res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]).json({ ...user })

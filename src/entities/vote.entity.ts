@@ -17,6 +17,5 @@ export class Vote {
 
     @ManyToOne(() => User, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_id' })
-    @Exclude()
     user: User
 }

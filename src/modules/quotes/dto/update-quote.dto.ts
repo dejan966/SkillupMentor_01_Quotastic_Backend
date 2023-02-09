@@ -5,5 +5,8 @@ export class UpdateQuoteDto {
     quote:string;
     
     @IsNotEmpty()
+    karma:number;
+    
+    @IsNotEmpty()
     user_id: number
 }

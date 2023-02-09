@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieparser from 'cookie-parser'
-import express from 'express'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './modules/app.module';
 
 async function bootstrap() {
@@ -14,6 +14,16 @@ async function bootstrap() {
   })
   app.useGlobalPipes(new ValidationPipe())
   app.use(cookieparser())
+
+
+  const config = new DocumentBuilder()
+  .setTitle('NestJS Tutorial API')
+  .setDescription('This is API from NestJS tutorial')
+  .setVersion('1.0.0')
+  .build()
+
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('/', app, document)
 
   //Setup to display files
   //app.use('/files', express.static('files'))

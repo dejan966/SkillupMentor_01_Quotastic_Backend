@@ -14,11 +14,9 @@ export class Quote {
     quote:string;
     
     @CreateDateColumn()
-    @Exclude()
     posted_when: string
 
     @ManyToOne(() => User, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_id' })
-    @Exclude()
     user: User
 }

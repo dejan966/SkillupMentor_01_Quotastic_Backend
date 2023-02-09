@@ -24,12 +24,12 @@ export class QuotesService{
     }
   }
 
-  async findAll() {
+  async findAll():Promise<Quote[]> {
     return await this.quotesRepository.find()
   }
 
-  async findById(quoteId: number, userData: User):Promise<Quote> {
-    const quote = await this.quotesRepository.findOne({ where: { id: quoteId, user: userData }})
+  async findById(quoteId: number, user: User):Promise<Quote> {
+    const quote = await this.quotesRepository.findOne({ where: { id: quoteId, user }})
     return quote
   }
 
@@ -37,6 +37,7 @@ export class QuotesService{
     const quote = await this.quotesRepository.findOne({ where: { id }})
     try {
       quote.quote = updateQuoteDto.quote;
+      quote.karma = updateQuoteDto.karma;
       return this.quotesRepository.save(quote)
     } catch (error) {
       Logging.error(error)

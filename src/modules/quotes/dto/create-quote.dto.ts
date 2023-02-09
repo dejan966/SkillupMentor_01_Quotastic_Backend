@@ -1,12 +1,13 @@
 import { IsNotEmpty } from "class-validator";
-import { Column } from "typeorm";
 
 export class CreateQuoteDto {
+    @IsNotEmpty()
     karma:number;
 
     @IsNotEmpty()
     quote:string;
     
+    @IsNotEmpty()
     posted_when: string
 
     @IsNotEmpty()

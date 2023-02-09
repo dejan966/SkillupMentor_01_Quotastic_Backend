@@ -16,13 +16,13 @@ export class User {
     email:string;
 
     @Column()
+    @Exclude()
     password:string
 
     @Column()
     avatar: string
 
     @Column({default:true})
-    @Exclude()
     isActive:boolean
 
     @Column({ nullable: true, default: null })
