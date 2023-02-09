@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { Quote } from 'src/entities/quote.entity';
+import { User } from 'src/entities/user.entity';
 import Logging from 'src/library/Logging';
 import { Repository } from 'typeorm';
 import { AbstractService } from '../common/abstract.service';
@@ -11,9 +13,8 @@ import { UpdateQuoteDto } from './dto/update-quote.dto';
 export class QuotesService extends AbstractService {
   constructor(
     @InjectRepository(Quote)
-    private readonly quotesRepository: Repository<Quote>,
-  ) {
-    super(quotesRepository)
+    private readonly quotesRepository: Repository<Quote>) 
+    { super(quotesRepository) 
   }
   
   async create(createQuoteDto: CreateQuoteDto): Promise<Quote> {
@@ -36,8 +37,8 @@ export class QuotesService extends AbstractService {
     return this.quotesRepository.save(quote)
   }
 
-  async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {
-    const quote = (await this.findById(id)) as Quote
+  async update(quoteId: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {
+    const quote = (await this.findById(quoteId)) as Quote
     try {
       quote.quote = updateQuoteDto.quote;
       return this.quotesRepository.save(quote)

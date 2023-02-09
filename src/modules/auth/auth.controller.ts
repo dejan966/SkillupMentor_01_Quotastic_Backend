@@ -1,5 +1,4 @@
 import { Controller, Post, Body, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req, UseGuards, Get } from '@nestjs/common';
-import { GetCurrentUserId } from 'src/decorators/get-current-user-id.decorator';
 import { Public } from 'src/decorators/public.decorator';
 import { Response } from 'express'
 import { User } from 'src/entities/user.entity';
@@ -16,7 +15,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Post('register')
+  @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() body: RegisterUserDto):Promise<User> {
     return this.authService.register(body);
@@ -32,8 +31,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('signout')
   @HttpCode(HttpStatus.OK)
-  async signout(@GetCurrentUserId() userid: number, @Res() res: Response): Promise<void> {
-    return this.authService.signout(userid, res)
+  async signout(@GetCurrentUser() userData: User, @Res() res: Response): Promise<void> {
+    return this.authService.signout(userData.id, res)
   }
   
   @UseGuards(JwtAuthGuard)

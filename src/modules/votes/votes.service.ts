@@ -1,24 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { AbstractService } from '../common/abstract.service';
 
 @Injectable()
 export class VotesService {
-  create() {
-    return 'This action adds a new vote';
-  }
-
-  findAll() {
+  async findAll() {
     return `This action returns all votes`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} vote`;
-  }
-
-  update(id: number) {
+  async vote(id: number) {
     return `This action updates a #${id} vote`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} vote`;
   }
 }

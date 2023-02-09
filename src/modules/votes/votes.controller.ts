@@ -5,28 +5,18 @@ import { VotesService } from './votes.service';
 export class VotesController {
   constructor(private readonly votesService: VotesService) {}
 
-  @Post()
-  create() {
-    return this.votesService.create();
-  }
-
   @Get()
-  findAll() {
+  async findAll() {
     return this.votesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.votesService.findOne(+id);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: number) {
-    return this.votesService.update(id);
+  async vote(@Param('id') id: number) {
+    return this.votesService.vote(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.votesService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return this.votesService.remove(id);
   }
 }
