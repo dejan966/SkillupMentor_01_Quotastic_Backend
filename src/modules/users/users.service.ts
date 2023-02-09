@@ -16,7 +16,7 @@ export class UsersService{
   ) {}
   
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = await this.findBy(createUserDto.email)
+    const user = await this.findBy({email:createUserDto.email})
     if (user) {
       throw new BadRequestException('User with that email already exists')
     }
@@ -39,18 +39,19 @@ export class UsersService{
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }})
+    const user = await this.findBy({id})
+    console.log(user.refresh_token)
     try{
       for (const key in user) {
         if(updateUserDto[key]) 
           user[key] = updateUserDto[key]
-        else
+/*         else
           throw new BadRequestException('Updated fields have to be different than the old ones')
-      }
+ */       }
       return this.usersRepository.save(user)
     }
     catch(error){
-      Logging.error(error)
+      console.log(error)
       throw new NotFoundException(`user with an id of ${id} not found`)
     }
   }

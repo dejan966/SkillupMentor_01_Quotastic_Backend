@@ -8,6 +8,8 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { UserData } from 'src/interfaces/user.interface';
+import { ApiBody } from '@nestjs/swagger';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -17,13 +19,57 @@ export class AuthController {
   @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        first_name: {
+          type: 'string',
+          example: 'example',
+        },
+        last_name: {
+          type: 'string',
+          example: 'sdsaf',
+        },
+        email: {
+          type: 'string',
+          example: 'email@gmail.com',
+        },
+        password: {
+          type: 'string',
+          example: '12345678',
+        },
+        confirm_password: {
+          type: 'string',
+          example: '12345678',
+        },
+      },
+    },
+  })
   async register(@Body() body: RegisterUserDto):Promise<User> {
     return this.authService.register(body);
   }
 
   @Public()
-  @Post('auth/login')
+  @Post('login')
   @HttpCode(HttpStatus.OK)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          example: 'email@gmail.com',
+        },
+        password: {
+          type: 'string',
+          example: '12345678',
+        },
+      },
+    },
+  })
+
+  @UseGuards(LocalAuthGuard)
   async login(@Req() req: RequestWithUser, @Res() res: Response):Promise<void> {
     return this.authService.login(req.user, res);
   }

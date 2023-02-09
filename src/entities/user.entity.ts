@@ -19,7 +19,7 @@ export class User {
     @Exclude()
     password:string
 
-    @Column()
+    @Column({default:'sghffewfdgfrew'})
     avatar: string
 
     @Column({default:true})

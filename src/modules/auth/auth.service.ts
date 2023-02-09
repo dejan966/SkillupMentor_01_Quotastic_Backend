@@ -52,7 +52,7 @@ export class AuthService {
       await this.updateRtHash(user.id, refreshToken)
       res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]).json({ ...user })
     } catch (error) {
-      Logging.error(error)
+      console.log(error)
       throw new InternalServerErrorException('Something went wrong while setting cookies into response header')
     }
   }
@@ -86,7 +86,7 @@ export class AuthService {
     try {
       await this.usersService.update(userId, { refresh_token: rt })
     } catch (error) {
-      Logging.error(error)
+      console.log(error)
       throw new InternalServerErrorException('Something went wrong while updating user refresh token')
     }
   }
@@ -123,8 +123,8 @@ export class AuthService {
           break
         case JwtType.REFRESH_TOKEN:
           token = await this.jwtService.signAsync(payload, {
-            secret: this.configService.get('JWT_REFRESH_SECRET'),
-            expiresIn: `${this.configService.get('JWT_REFRESH_SECRET_EXPIRESS')}ss`,
+            secret: this.configService.get('JWT_REFRESH_SECRETS'),
+            expiresIn: `${this.configService.get('JWT_REFRESH_SECRET_EXPIRES')}s`,
           })
           break
         default:
@@ -132,7 +132,7 @@ export class AuthService {
       }
       return token
     } catch (error) {
-      Logging.error(error)
+      console.log(error)
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new BadRequestException('User with that email already exists')
       }
@@ -162,7 +162,7 @@ export class AuthService {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new BadRequestException('User with that email already exists')
       }
-      throw new InternalServerErrorException('Something went wrong while generating a new token')
+      throw new InternalServerErrorException('Something went wrong while generating a new cookie')
     }
   }
 
