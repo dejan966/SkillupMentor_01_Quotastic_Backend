@@ -1,15 +1,8 @@
 import { IsNotEmpty } from "class-validator";
+import { User } from "src/entities/user.entity";
 
 export class CreateQuoteDto {
     @IsNotEmpty()
-    karma:number;
-
-    @IsNotEmpty()
-    quote:string;
-    
-    @IsNotEmpty()
-    posted_when: string
-
-    @IsNotEmpty()
-    user_id: number
+    quote:string
+    user: User
 }

@@ -6,8 +6,10 @@ export class UserGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-/*     const {user:User, params} = context.switchToHttp().getRequest()
-    for(const iterator of user.first_name) */
-    return true;
+    const { current_user, params } = context.switchToHttp().getRequest()
+    for (const iterator of current_user.quotes) {
+      if (iterator.id == params.id) return true
+    }
+    return false
   }
 }

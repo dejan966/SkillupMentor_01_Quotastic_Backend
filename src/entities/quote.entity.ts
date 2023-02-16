@@ -16,7 +16,6 @@ export class Quote {
     @CreateDateColumn()
     posted_when: string
 
-    @ManyToOne(() => User, { onDelete: 'SET NULL' })
-    @JoinColumn({ name: 'user_id' })
+    @ManyToOne(() => User, user=>user.quotes, { onDelete: 'SET NULL' })
     user: User
 }

@@ -14,6 +14,7 @@ import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
 import { User } from 'src/entities/user.entity';
+import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 
 @Controller('quotes')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -21,8 +22,8 @@ export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
   @Post()
-  async create(@Body() createQuoteDto: CreateQuoteDto) {
-    return this.quotesService.create(createQuoteDto);
+  async create(@GetCurrentUser() user:User, @Body() createQuoteDto: CreateQuoteDto) {
+    return this.quotesService.create(createQuoteDto, user);
   }
 
   @Get()

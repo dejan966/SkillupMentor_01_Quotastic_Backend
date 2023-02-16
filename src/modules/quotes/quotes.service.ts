@@ -13,10 +13,10 @@ export class QuotesService{
   constructor(
     @InjectRepository(Quote)
     private readonly quotesRepository: Repository<Quote>){}
-    
-  async create(createQuoteDto: CreateQuoteDto): Promise<Quote> {
+  
+  async create(createQuoteDto: CreateQuoteDto, user:User): Promise<Quote> {
     try {
-      const quote = this.quotesRepository.create({ ...createQuoteDto })
+      const quote = this.quotesRepository.create({ ...createQuoteDto, user })
       return this.quotesRepository.save(quote)
     } catch (error) {
       Logging.error(error)
