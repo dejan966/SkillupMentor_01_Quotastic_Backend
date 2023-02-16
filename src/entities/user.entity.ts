@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Quote } from './quote.entity';
+import { Vote } from './vote.entity';
 
 @Entity()
 export class User {
@@ -20,7 +21,7 @@ export class User {
     @Exclude()
     password:string
 
-    @Column({default:'sghffewfdgfrew'})
+    @Column({default:'default-avatar.png'})
     avatar: string
 
     @Column({default:true})
@@ -32,4 +33,7 @@ export class User {
 
     @OneToMany(() => Quote, quote=>quote.user)
     quotes: Quote[]
+
+    @OneToMany(() => Vote, vote=>vote.user)
+    votes: Vote[]
 }

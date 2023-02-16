@@ -11,11 +11,9 @@ export class Vote {
     @Column()
     value:boolean
 
-    @ManyToOne(() => Quote, { onDelete: 'SET NULL' })
-    @JoinColumn({ name: 'quote_id' })
+    @ManyToOne(() => Quote, quote=>quote.votes, { onDelete: 'SET NULL' })
     quote: Quote
 
-    @ManyToOne(() => User, { onDelete: 'SET NULL' })
-    @JoinColumn({ name: 'user_id' })
+    @ManyToOne(() => User, user=>user.votes, { onDelete: 'SET NULL' })
     user: User
 }

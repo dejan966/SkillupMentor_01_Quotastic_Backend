@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, OneToMany } from 'typeorm';
 import { User } from './user.entity';
+import { Vote } from './vote.entity';
 
 @Entity()
 export class Quote {
@@ -18,4 +19,7 @@ export class Quote {
 
     @ManyToOne(() => User, user=>user.quotes, { onDelete: 'SET NULL' })
     user: User
+
+    @OneToMany(()=> Vote, vote=>vote.quote,)
+    votes: Vote[]
 }
