@@ -2,7 +2,7 @@ import { IsNotEmpty, IsOptional } from "class-validator/types/decorator/decorato
 
 export class CreateVoteDto {
     @IsNotEmpty()
-    upvote:boolean
+    value:boolean
 
     @IsNotEmpty()
     quote_id: number

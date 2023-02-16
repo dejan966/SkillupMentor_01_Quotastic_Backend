@@ -19,33 +19,6 @@ export class AuthController {
   @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        first_name: {
-          type: 'string',
-          example: 'example',
-        },
-        last_name: {
-          type: 'string',
-          example: 'sdsaf',
-        },
-        email: {
-          type: 'string',
-          example: 'email@gmail.com',
-        },
-        password: {
-          type: 'string',
-          example: '12345678',
-        },
-        confirm_password: {
-          type: 'string',
-          example: '12345678',
-        },
-      },
-    },
-  })
   async register(@Body() body: RegisterUserDto):Promise<User> {
     return this.authService.register(body);
   }
@@ -53,22 +26,6 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-          example: 'email@gmail.com',
-        },
-        password: {
-          type: 'string',
-          example: '12345678',
-        },
-      },
-    },
-  })
-
   @UseGuards(LocalAuthGuard)
   async login(@Req() req: RequestWithUser, @Res() res: Response):Promise<void> {
     return this.authService.login(req.user, res);
@@ -82,7 +39,7 @@ export class AuthController {
   }
   
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('me')
   @HttpCode(HttpStatus.OK)
   async getCurrentUser(@GetCurrentUser() user: User): Promise<UserData> {
     return {
