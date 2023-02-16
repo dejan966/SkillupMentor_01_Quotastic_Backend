@@ -43,14 +43,6 @@ export class VotesService {
     })
   }
 
-  async create(value: Boolean, user: User, quote: Quote){
-    /* const vote = await this.votesRepository.create({value, user, quote}) as Vote
-    return this.votesRepository.save(vote).then(() => {
-        const karma = value ? vote.quote.karma + 1 : vote.quote.karma - 1
-        return this.quotesService.update(vote.quote.id, new UpdateQuoteDto[karma])
-    }) */
-  }
-
   async update(id: number){
     const vote = await this.votesRepository.findOne({where : {id}})
     vote.value = !vote.value
