@@ -52,7 +52,6 @@ export class AuthService {
       await this.updateRtHash(user.id, refreshToken)
       res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]).json({ ...user })
     } catch (error) {
-      console.log(error)
       throw new InternalServerErrorException('Something went wrong while setting cookies into response header')
     }
   }
@@ -86,7 +85,6 @@ export class AuthService {
     try {
       await this.usersService.update(userId, { refresh_token: rt })
     } catch (error) {
-      console.log(error)
       throw new InternalServerErrorException('Something went wrong while updating user refresh token')
     }
   }
@@ -132,7 +130,6 @@ export class AuthService {
       }
       return token
     } catch (error) {
-      console.log(error)
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new BadRequestException('User with that email already exists')
       }

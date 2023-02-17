@@ -40,7 +40,6 @@ export class UsersService{
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findBy({id})
-    console.log(user.refresh_token)
     try{
       for (const key in user) {
         if(updateUserDto[key]) 
@@ -51,7 +50,6 @@ export class UsersService{
       return this.usersRepository.save(user)
     }
     catch(error){
-      console.log(error)
       throw new NotFoundException(`user with an id of ${id} not found`)
     }
   }
