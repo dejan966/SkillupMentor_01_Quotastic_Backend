@@ -1,5 +1,4 @@
-import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, AfterInsert, getConnection } from 'typeorm';
 import { Quote } from './quote.entity';
 import { User } from './user.entity';
 
@@ -16,4 +15,11 @@ export class Vote {
 
     @ManyToOne(() => User, user=>user.votes, { onDelete: 'SET NULL' })
     user: User
+
+    /* @AfterInsert()
+    public async handleAfterInsert() {
+        const quoteEntityUpdate = new Quote()
+        quoteEntityUpdate.karma = quoteEntityUpdate.karma+1
+        await getConnection().getRepository(Quote).save(quoteEntityUpdate);
+    } */
 }

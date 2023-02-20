@@ -12,7 +12,8 @@ import { UpdateQuoteDto } from './dto/update-quote.dto';
 export class QuotesService{
   constructor(
     @InjectRepository(Quote)
-    private readonly quotesRepository: Repository<Quote>){}
+    private readonly quotesRepository: Repository<Quote>
+    ){}
   
   async create(createQuoteDto: CreateQuoteDto, user:User): Promise<Quote> {
     try {

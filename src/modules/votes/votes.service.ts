@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from 'src/entities/quote.entity';
 import { User } from 'src/entities/user.entity';
 import { Vote } from 'src/entities/vote.entity';
+import Logging from 'src/library/Logging';
 import { Repository } from 'typeorm';
 import { UpdateQuoteDto } from '../quotes/dto/update-quote.dto';
 import { QuotesService } from '../quotes/quotes.service';
@@ -15,12 +16,33 @@ export class VotesService {
     private readonly quotesService: QuotesService
   ) {}
 
+  async createVote(value: boolean, user: User, quote: Quote){
+    try {
+      const newVote = this.votesRepository.create({ value, user, quote }) as Vote
+      return this.votesRepository.save(newVote).then(() => {
+        const karma = value ? newVote.quote.karma + 1 : newVote.quote.karma - 1
+        return this.quotesService.update(newVote.quote.id, new UpdateQuoteDto[karma])
+    })
+    } catch (error) {
+      Logging.error(error)
+      throw new BadRequestException('Something went wrong while voting')
+    }
+  }
+
+  async findAllUsersVotes():Promise<Vote[]> {
+    return this.votesRepository.find({relations:['user', 'quote']})
+  }
+
   async findUserVotes(user:User, quote:Quote):Promise<Vote[]> {
-    return this.votesRepository.find({where : {user, quote}})
+    return this.votesRepository.find({where : {user, quote}, relations:['user', 'quote']})
+  }
+
+  async findAllCurrUserVotes(user:User):Promise<Vote[]> {
+    return await this.votesRepository.find({where:{user}, relations:['user']})
   }
 
   async findUserVote(user:User, quote:Quote):Promise<Vote>{
-    const getVote = this.votesRepository.findOne({where : {user, quote}})
+    const getVote = this.votesRepository.findOne({where : {user, quote},  relations:['user', 'quote']})
     return getVote
   }
   
@@ -36,11 +58,7 @@ export class VotesService {
           return this.quotesService.update(getVote.quote.id, new UpdateQuoteDto[karma])
       }) 
     }
-    const vote = await this.votesRepository.create({value, user, quote}) as Vote
-    return this.votesRepository.save(vote).then(() => {
-        const karma = value ? vote.quote.karma + 1 : vote.quote.karma - 1
-        return this.quotesService.update(vote.quote.id, new UpdateQuoteDto[karma])
-    })
+    this.createVote
   }
 
   async update(id: number){

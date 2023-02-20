@@ -6,16 +6,16 @@ import { Vote } from './vote.entity';
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id:number;
+    id:number
 
     @Column({ nullable: true })
-    first_name:string;
+    first_name:string
 
     @Column({ nullable: true })
-    last_name:string;
+    last_name:string
 
     @Column({ unique: true })
-    email:string;
+    email:string
 
     @Column()
     @Exclude()

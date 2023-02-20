@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, OneToMany } from 'typeorm';
 import { User } from './user.entity';
 import { Vote } from './vote.entity';
@@ -6,10 +5,10 @@ import { Vote } from './vote.entity';
 @Entity()
 export class Quote {
     @PrimaryGeneratedColumn()
-    id:number;
+    id:number
 
     @Column({default: 0})
-    karma:number;
+    karma:number
 
     @Column()
     quote:string;
