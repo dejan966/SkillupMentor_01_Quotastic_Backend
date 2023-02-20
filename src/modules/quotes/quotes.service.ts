@@ -29,7 +29,7 @@ export class QuotesService{
   }
 
   async findAllCurrUserQuotes(user:User):Promise<Quote[]> {
-    return await this.quotesRepository.find({where:{user}})
+    return await this.quotesRepository.find({where:{user}, relations:['user']})
   }
 
   async findById(id: number):Promise<Quote> {
@@ -48,8 +48,13 @@ export class QuotesService{
     } 
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Quote> {
     const quote = await this.findById(id)
-    return this.quotesRepository.delete(quote)
+    try {
+      return this.quotesRepository.remove(quote)
+    } catch (error) {
+      Logging.error(error)
+      throw new InternalServerErrorException('Something went wrong while deleting the quote')
+    } 
   }
 }
