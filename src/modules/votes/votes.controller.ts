@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { Quote } from 'src/entities/quote.entity';
 import { User } from 'src/entities/user.entity';
 import { VotesService } from './votes.service';
@@ -18,7 +19,7 @@ export class VotesController {
   }
 
   @Patch(':id')
-  async vote(value: boolean, user: User, quote: Quote) {
+  async vote(value: boolean, @GetCurrentUser() user: User, quote: Quote) {
     return this.votesService.voting(value, user, quote);
   }
 

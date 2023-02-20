@@ -5,10 +5,7 @@ import { UsersModule } from './users/users.module';
 import { QuotesModule } from './quotes/quotes.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { AppService } from './app.service';
-import { LoggerMiddleware } from 'src/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -28,6 +25,6 @@ import { LoggerMiddleware } from 'src/middleware/logger.middleware';
 })
 export class AppModule {
 /*   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
+    consumer.apply(CurrentUserMiddleware).forRoutes('*')
   } */
 }

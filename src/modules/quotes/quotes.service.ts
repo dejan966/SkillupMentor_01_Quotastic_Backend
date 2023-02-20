@@ -25,19 +25,22 @@ export class QuotesService{
   }
 
   async findAll():Promise<Quote[]> {
-    return await this.quotesRepository.find()
+    return await this.quotesRepository.find({relations:['user']})
   }
 
-  async findById(quoteId: number, user: User):Promise<Quote> {
-    const quote = await this.quotesRepository.findOne({ where: { id: quoteId, user }})
+  async findAllCurrUserQuotes(user:User):Promise<Quote[]> {
+    return await this.quotesRepository.find({where:{user}})
+  }
+
+  async findById(id: number):Promise<Quote> {
+    const quote = await this.quotesRepository.findOne({ where: { id }, relations:['user']})
     return quote
   }
 
   async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {
-    const quote = await this.quotesRepository.findOne({ where: { id }})
+    const quote = await this.findById(id)
     try {
-      quote.quote = updateQuoteDto.quote;
-      quote.karma = updateQuoteDto.karma;
+      quote.quote = updateQuoteDto.quote
       return this.quotesRepository.save(quote)
     } catch (error) {
       Logging.error(error)
@@ -46,7 +49,7 @@ export class QuotesService{
   }
 
   async remove(id: number) {
-    const quote = await this.quotesRepository.findOne({ where: { id }})
+    const quote = await this.findById(id)
     return this.quotesRepository.delete(quote)
   }
 }

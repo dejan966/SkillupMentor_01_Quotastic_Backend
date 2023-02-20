@@ -15,7 +15,7 @@ export class VotesService {
     private readonly quotesService: QuotesService
   ) {}
 
-  async findUserVotes(user:User, quote:Quote) {
+  async findUserVotes(user:User, quote:Quote):Promise<Vote[]> {
     return this.votesRepository.find({where : {user, quote}})
   }
 

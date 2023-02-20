@@ -29,6 +29,10 @@ export class UsersService{
     }
   }
 
+  async findAll():Promise<User[]> {
+    return await this.usersRepository.find()
+  }
+
   async findById(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id }, relations:['quotes']})
     return user
@@ -39,7 +43,7 @@ export class UsersService{
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findBy({id})
+    const user = await this.findById(id)
     try{
       for (const key in user) {
         if(updateUserDto[key]) 

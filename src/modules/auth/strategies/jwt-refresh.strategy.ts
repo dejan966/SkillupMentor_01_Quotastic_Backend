@@ -5,7 +5,6 @@ import { Request } from 'express'
 import { TokenPayload } from 'src/interfaces/auth.interface'
 import { UserData } from 'src/interfaces/user.interface'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-
 import { AuthService } from '../auth.service'
 
 @Injectable()
@@ -17,7 +16,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
           return request?.cookies?.refresh_token
         },
       ]),
-      secretOrKey: configService.get('JWT_REFRESH_SECRETS'),
+      secretOrKey: configService.get('JWT_REFRESH_SECRET'),
       passReqToCallback: true,
     })
   }

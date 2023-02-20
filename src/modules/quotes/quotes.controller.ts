@@ -35,9 +35,14 @@ export class QuotesController {
     return this.quotesService.findAll();
   }
 
+  @Get('me')
+  async findAllCurrUserQuotes(@GetCurrentUser() user:User) {
+    return this.quotesService.findAllCurrUserQuotes(user);
+  }
+
   @Get(':id')
-  async findOne(@Param('id') quoteId: number, userData: User) {
-    return this.quotesService.findById(quoteId, userData);
+  async findOne(@Param('id') quoteId: number) {
+    return this.quotesService.findById(quoteId);
   }
 
   @UseGuards(JwtAuthGuard, UserGuard)

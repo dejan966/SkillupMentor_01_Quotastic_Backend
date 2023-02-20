@@ -27,6 +27,21 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          example: 'test@gmail.com',
+        },
+        password: {
+          type: 'string',
+          example: 'Slenderman123!',
+        },
+      },
+    },
+  })
   async login(@Req() req: RequestWithUser, @Res() res: Response):Promise<void> {
     return this.authService.login(req.user, res);
   }

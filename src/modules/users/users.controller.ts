@@ -15,6 +15,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from 'src/entities/user.entity';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -27,11 +28,27 @@ export class UsersController {
     return this.usersService.create(createUserDto)
   }
 
+  @Get()
+  async findAll() {
+    return this.usersService.findAll();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.usersService.findById(id)
   }
 
+/*   @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          example: 'dejan2@gmail.com',
+        },
+      },
+    },
+  }) */
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
