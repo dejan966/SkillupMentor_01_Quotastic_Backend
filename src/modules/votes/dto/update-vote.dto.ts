@@ -1,6 +1,7 @@
 import { IsNotEmpty } from "class-validator/types/decorator/decorators";
 
-export class CreateVoteDto {
+export class UpdateVoteDto {
     @IsNotEmpty()
-    upvote:boolean
+    value:boolean
+    karma:number
 }

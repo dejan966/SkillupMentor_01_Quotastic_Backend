@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, AfterInsert, getConnection } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, AfterInsert } from 'typeorm';
 import { Quote } from './quote.entity';
 import { User } from './user.entity';
 
@@ -7,7 +7,7 @@ export class Vote {
     @PrimaryGeneratedColumn()
     id:number
 
-    @Column()
+    @Column({default:false})
     value:boolean
 
     @ManyToOne(() => Quote, quote=>quote.votes, { onDelete: 'SET NULL' })

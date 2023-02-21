@@ -26,7 +26,7 @@ export class QuotesController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@GetCurrentUser() user:User, @Body() createQuoteDto: CreateQuoteDto) {
+  async create(@Body() createQuoteDto: CreateQuoteDto, @GetCurrentUser() user:User) {
     return this.quotesService.create(createQuoteDto, user);
   }
 

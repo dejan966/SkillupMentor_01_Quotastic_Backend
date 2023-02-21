@@ -16,13 +16,14 @@ export class VotesService {
     private readonly quotesService: QuotesService
   ) {}
 
-  async createVote(value: boolean, user: User, quote: Quote){
+  async createVote(value: boolean, user: User, quoteId: number){
     try {
+      const quote = await this.quotesService.findById(quoteId)
       const newVote = this.votesRepository.create({ value, user, quote }) as Vote
       return this.votesRepository.save(newVote).then(() => {
         const karma = value ? newVote.quote.karma + 1 : newVote.quote.karma - 1
-        return this.quotesService.update(newVote.quote.id, new UpdateQuoteDto[karma])
-    })
+        return this.quotesService.update(newVote.quote.id, {karma})
+      })
     } catch (error) {
       Logging.error(error)
       throw new BadRequestException('Something went wrong while voting')
@@ -32,13 +33,13 @@ export class VotesService {
   async findAllUsersVotes():Promise<Vote[]> {
     return this.votesRepository.find({relations:['user', 'quote']})
   }
-
-  async findUserVotes(user:User, quote:Quote):Promise<Vote[]> {
-    return this.votesRepository.find({where : {user, quote}, relations:['user', 'quote']})
-  }
+/* 
+  async findUserVotes(user:User, quoteId:number):Promise<Vote[]> {
+    return this.votesRepository.find({where : {user, quote: quoteId}, relations:['user', 'quote']})
+  } */
 
   async findAllCurrUserVotes(user:User):Promise<Vote[]> {
-    return await this.votesRepository.find({where:{user}, relations:['user']})
+    return await this.votesRepository.find({where:{user}, relations:['user', 'quote']})
   }
 
   async findUserVote(user:User, quote:Quote):Promise<Vote>{

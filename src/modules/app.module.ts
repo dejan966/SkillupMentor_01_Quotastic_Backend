@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { ClassSerializerInterceptor, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { AppService } from './app.service';
 import { VotesModule } from './votes/votes.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { VotesModule } from './votes/votes.module';
     VotesModule
   ],
   controllers: [AppController],
-  providers: [ 
+  providers: [
+    {provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor},
     AppService,
   ],
 })

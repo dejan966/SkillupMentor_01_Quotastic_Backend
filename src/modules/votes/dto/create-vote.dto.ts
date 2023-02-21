@@ -5,10 +5,6 @@ import { User } from "src/entities/user.entity";
 export class CreateVoteDto {
     @IsNotEmpty()
     value:boolean
-
-    @IsNotEmpty()
     quote: Quote
-
-    @IsNotEmpty()
     user: User
 }

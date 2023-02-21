@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
-import { PostgresErrorCode } from 'src/helpers/postgresErrorCode.enum';
 import Logging from 'src/library/Logging';
 import { compareHash, hash } from 'src/modules/utils/bcrypt';
 import { Repository } from 'typeorm';
@@ -34,7 +33,7 @@ export class UsersService{
   }
 
   async findById(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }, relations:['quotes']})
+    const user = await this.usersRepository.findOne({ where: { id }, relations:['quotes', 'votes', 'votes.quotes']})
     return user
   }
 
@@ -46,15 +45,12 @@ export class UsersService{
     const user = await this.findById(id)
     try{
       for (const key in user) {
-        if(updateUserDto[key]) 
-          user[key] = updateUserDto[key]
-/*         else
-          throw new BadRequestException('Updated fields have to be different than the old ones')
- */       }
+        if(updateUserDto[key]) user[key] = updateUserDto[key]
+      }
       return this.usersRepository.save(user)
     }
     catch(error){
-      throw new NotFoundException(`user with an id of ${id} not found`)
+      throw new NotFoundException('Something went wrong while updating your data')
     }
   }
 
