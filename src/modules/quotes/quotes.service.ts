@@ -36,10 +36,6 @@ export class QuotesService{
     return userQuote
   }
 
-  async findAllCurrUserQuotes(user:User):Promise<Quote[]> {
-    return await this.quotesRepository.find({where:{user}, relations:['user']})
-  }
-
   async findById(id: number):Promise<Quote> {
     try{
       const quote = await this.quotesRepository.findOneOrFail({ where: { id }, relations:['user']})

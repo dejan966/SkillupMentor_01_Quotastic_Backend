@@ -33,17 +33,9 @@ export class VotesService {
   async findAllUsersVotes():Promise<Vote[]> {
     return this.votesRepository.find({relations:['user', 'quote']})
   }
-/* 
-  async findUserVotes(user:User, quoteId:number):Promise<Vote[]> {
-    return this.votesRepository.find({where : {user, quote: quoteId}, relations:['user', 'quote']})
-  } */
 
-  async findAllCurrUserVotes(user:User):Promise<Vote[]> {
-    return await this.votesRepository.find({where:{user}, relations:['user', 'quote']})
-  }
-
-  async findUserVote(user:User, quote:Quote):Promise<Vote>{
-    const getVote = this.votesRepository.findOne({where : {user, quote},  relations:['user', 'quote']})
+  async findUserVote(user:User, quote:Quote){
+    const getVote = this.votesRepository.findOne({where : {user, quote},  relations:['quote.votes']})
     return getVote
   }
   
@@ -52,14 +44,13 @@ export class VotesService {
     if(getVote){
       if(getVote.value === value) return this.delete(getVote.id).then(() => {
           const karma = value ? getVote.quote.karma - 1 : getVote.quote.karma + 1
-          return this.quotesService.update(getVote.quote.id, new UpdateQuoteDto[karma])
+          return this.quotesService.update(getVote.quote.id, {karma})
       })
       return this.update(getVote.id).then(() => {
           const karma = value ? getVote.quote.karma + 2 : getVote.quote.karma - 2
-          return this.quotesService.update(getVote.quote.id, new UpdateQuoteDto[karma])
+          return this.quotesService.update(getVote.quote.id, {karma})
       }) 
     }
-    this.createVote
   }
 
   async update(id: number){

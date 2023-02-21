@@ -23,12 +23,11 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
   ],
   controllers: [AppController],
   providers: [
-    {provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor},
+    {
+      provide: APP_INTERCEPTOR, 
+      useClass: ClassSerializerInterceptor
+    },
     AppService,
   ],
 })
-export class AppModule {
-/*   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CurrentUserMiddleware).forRoutes('*')
-  } */
-}
+export class AppModule {}

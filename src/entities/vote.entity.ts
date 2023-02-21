@@ -15,11 +15,4 @@ export class Vote {
 
     @ManyToOne(() => User, user=>user.votes, { onDelete: 'SET NULL' })
     user: User
-
-    /* @AfterInsert()
-    public async handleAfterInsert() {
-        const quoteEntityUpdate = new Quote()
-        quoteEntityUpdate.karma = quoteEntityUpdate.karma+1
-        await getConnection().getRepository(Quote).save(quoteEntityUpdate);
-    } */
 }

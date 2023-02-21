@@ -30,25 +30,15 @@ export class VotesController {
     return this.votesService.findAllUsersVotes()
   }
 
-  /* @Get(':id')
-  async findUserVotes(user:User,  @Param('id') quoteId: number) {
-    return this.votesService.findUserVotes(user, quoteId)
-  }
- */
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   async findAllCurrUserVotes(@GetCurrentUser() user:User) {
-    return this.votesService.findAllCurrUserVotes(user)
+    return user.votes
   }
 
   @UseGuards(JwtAuthGuard, UserGuard)
   @Patch(':id')
   async vote(value: boolean, @GetCurrentUser() user: User, quote: Quote) {
     return this.votesService.voting(value, user, quote)
-  }
-
-  @UseGuards(JwtAuthGuard, UserGuard)
-  @Delete(':id')
-  async delete(@Param('id') id: number) {
-    return this.votesService.delete(id)
   }
 }

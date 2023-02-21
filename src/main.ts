@@ -16,7 +16,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
   app.use(cookieparser())
 
-
   const config = new DocumentBuilder()
   .setTitle('NestJS Tutorial API')
   .setDescription('This is API from NestJS tutorial')
@@ -25,9 +24,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('/', app, document)
-
-  //Setup to display files
-  //app.use('/files', express.static('files'))
 
   const PORT = process.env.PORT || 8080
   await app.listen(PORT)
