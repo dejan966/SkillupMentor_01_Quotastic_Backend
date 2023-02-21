@@ -33,7 +33,7 @@ export class UsersService{
   }
 
   async findById(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }, relations:['quotes', 'votes', 'votes.quotes']})
+    const user = await this.usersRepository.findOne({ where: { id }, relations:['quotes', 'votes', 'votes.quote']})
     return user
   }
 

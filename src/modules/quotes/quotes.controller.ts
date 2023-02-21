@@ -36,8 +36,9 @@ export class QuotesController {
   }
 
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   async findAllCurrUserQuotes(@GetCurrentUser() user:User) {
-    return this.quotesService.findAllCurrUserQuotes(user);
+   return user.quotes;
   }
 
   @Get(':id')

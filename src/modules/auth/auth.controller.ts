@@ -10,6 +10,7 @@ import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { UserData } from 'src/interfaces/user.interface';
 import { ApiBody } from '@nestjs/swagger';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { NotAuthGuard } from './guards/not-auth.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -18,6 +19,7 @@ export class AuthController {
 
   @Public()
   @Post('signup')
+  @UseGuards(NotAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() body: RegisterUserDto):Promise<User> {
     return this.authService.register(body);
@@ -26,7 +28,7 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard, NotAuthGuard)
   @ApiBody({
     schema: {
       type: 'object',
