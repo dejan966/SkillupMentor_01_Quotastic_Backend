@@ -17,14 +17,14 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = await this.findBy({ email: createUserDto.email });
     if (user) {
-      throw new BadRequestException('User with that email already exists');
+      throw new BadRequestException('User with that email already exists.');
     }
     try {
       const newUser = this.usersRepository.create({ ...createUserDto });
       return this.usersRepository.save(newUser);
     } catch (error) {
       Logging.error(error);
-      throw new BadRequestException('Something went wrong while creating a new user');
+      throw new BadRequestException('Something went wrong while creating a new user.');
     }
   }
 
@@ -49,7 +49,8 @@ export class UsersService {
       }
       return this.usersRepository.save(user);
     } catch (error) {
-      throw new NotFoundException('Something went wrong while updating your data');
+      Logging.log(error)
+      throw new NotFoundException('Something went wrong while updating the data.');
     }
   }
 
@@ -57,10 +58,10 @@ export class UsersService {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (updateUserDto.password && updateUserDto.confirm_password) {
       if (updateUserDto.password !== updateUserDto.confirm_password) {
-        throw new BadRequestException('Password do not match');
+        throw new BadRequestException('Passwords do not match.');
       }
       if (await compareHash(updateUserDto.password, user.password)) {
-        throw new BadRequestException('New password cannot be the same as old password');
+        throw new BadRequestException('New password cannot be the same as old password.');
       }
       user.password = await hash(updateUserDto.password);
     }
@@ -73,14 +74,14 @@ export class UsersService {
       return this.usersRepository.remove(user);
     } catch (error) {
       Logging.error(error);
-      throw new InternalServerErrorException(`Something went wrong while removing an element with the id '${id}' condition`);
+      throw new InternalServerErrorException('Something went wrong while deleting the account');
     }
   }
 
   async updateUserImageId(id: number, avatar: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (avatar === user.avatar) {
-      throw new BadRequestException('Avatars have to be different');
+      throw new BadRequestException('Avatars have to be different.');
     }
     user.avatar = avatar;
     return this.usersRepository.save(user);

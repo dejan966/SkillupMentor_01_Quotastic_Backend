@@ -127,9 +127,9 @@ export class AuthService {
       return token;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
-        throw new BadRequestException('User with that email already exists');
+        throw new BadRequestException('User with that email already exists.');
       }
-      throw new InternalServerErrorException('Something went wrong while generating a new token');
+      throw new InternalServerErrorException('Something went wrong while generating a new token.');
     }
   }
   async generateCookie(token: string, type: CookieType): Promise<string> {
@@ -149,9 +149,9 @@ export class AuthService {
     } catch (error) {
       Logging.error(error);
       if (error?.code === PostgresErrorCode.UniqueViolation) {
-        throw new BadRequestException('User with that email already exists');
+        throw new BadRequestException('User with that email already exists.');
       }
-      throw new InternalServerErrorException('Something went wrong while generating a new cookie');
+      throw new InternalServerErrorException('Something went wrong while generating a new cookie.');
     }
   }
 

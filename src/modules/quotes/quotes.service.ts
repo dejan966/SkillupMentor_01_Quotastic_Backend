@@ -1,20 +1,18 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotFoundError } from 'rxjs';
-import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { Quote } from 'src/entities/quote.entity';
 import { User } from 'src/entities/user.entity';
 import Logging from 'src/library/Logging';
-import { And, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateQuoteDto } from './dto/create-quote.dto';
-import { UpdateQuoteDto } from './dto/update-quote.dto';
+import { UpdateQuoteDto } from './dto/update-quote.dto'
 
 @Injectable()
 export class QuotesService {
   constructor(
     @InjectRepository(Quote)
-    private readonly quotesRepository: Repository<Quote>,
+    private readonly quotesRepository: Repository<Quote>
   ) {}
 
   async create(createQuoteDto: CreateQuoteDto, user: User): Promise<Quote> {
@@ -23,7 +21,7 @@ export class QuotesService {
       return this.quotesRepository.save(quote);
     } catch (error) {
       Logging.error(error);
-      throw new BadRequestException('Something went wrong while posting a quote');
+      throw new BadRequestException('Something went wrong while posting a quote.');
     }
   }
 
@@ -40,8 +38,9 @@ export class QuotesService {
     try {
       const quote = await this.quotesRepository.findOneOrFail({ where: { id }, relations: ['user', 'votes'] });
       return quote;
-    } catch ({ message }) {
-      throw new NotFoundException(`No quote with an id of ${id}`, message);
+    } catch (error) {
+      Logging.log(error)
+      throw new NotFoundException(`Unable to find a quote with an id of ${id}.`);
     }
   }
 
@@ -51,11 +50,10 @@ export class QuotesService {
       for (const key in quote) {
         if (updateQuoteDto[key] !== undefined) quote[key] = updateQuoteDto[key];
       }
-
       return this.quotesRepository.save(quote);
     } catch (error) {
       Logging.error(error);
-      throw new InternalServerErrorException('Something went wrong while updating the quote');
+      throw new InternalServerErrorException('Something went wrong while updating the quote.');
     }
   }
 
@@ -65,7 +63,7 @@ export class QuotesService {
       return this.quotesRepository.remove(quote);
     } catch (error) {
       Logging.error(error);
-      throw new InternalServerErrorException('Something went wrong while deleting the quote');
+      throw new InternalServerErrorException('Something went wrong while deleting the quote.');
     }
   }
 }

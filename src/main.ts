@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieparser());
 
-  const config = new DocumentBuilder().setTitle('NestJS Tutorial API').setDescription('This is API from NestJS tutorial').setVersion('1.0.0').build();
+  const config = new DocumentBuilder().setTitle('Quoastic').setDescription('This is the Quotastic app').setVersion('1.0.0').build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);

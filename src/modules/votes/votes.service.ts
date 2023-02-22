@@ -1,11 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Quote } from 'src/entities/quote.entity';
 import { User } from 'src/entities/user.entity';
 import { Vote } from 'src/entities/vote.entity';
 import Logging from 'src/library/Logging';
 import { Repository } from 'typeorm';
-import { UpdateQuoteDto } from '../quotes/dto/update-quote.dto';
 import { QuotesService } from '../quotes/quotes.service';
 
 @Injectable()
@@ -19,7 +17,8 @@ export class VotesService {
   async createVote(value: boolean, user: User, quoteId: number) {
     try {
       const vote = (await this.findUserVote(user, quoteId)) as Vote;
-      if (vote) { //not null
+      //not null
+      if (vote) { 
         if (vote.value === value) {
           return this.delete(vote.id).then(() => {
             const karma = value ? vote.quote.karma - 1 : vote.quote.karma + 1;
@@ -38,8 +37,8 @@ export class VotesService {
         return this.quotesService.update(newVote.quote.id, { karma });
       });
     } catch (error) {
-      console.log(error);
-      throw new BadRequestException('Something went wrong while voting');
+      Logging.log(error);
+      throw new BadRequestException('Something went wrong while casting a vote.');
     }
   }
 
@@ -54,9 +53,12 @@ export class VotesService {
     return this.votesRepository.find({ relations: ['user', 'quote'] });
   }
 
-  async findUserVote(user: User, quoteId: number) {
-    const getVote = await this.votesRepository.findOne({ where: { user: { email: user.email }, quote: { id: quoteId } }, relations: ['user', 'quote'] });
-    console.log(getVote);
+  async findUserVote(user: User, quoteId: number):Promise<Vote> {
+    const getVote = await this.votesRepository.findOne({ where: { 
+      user: { email: user.email },
+      quote: { id: quoteId } }, 
+      relations: ['user', 'quote'] 
+    });
     return getVote;
   }
 

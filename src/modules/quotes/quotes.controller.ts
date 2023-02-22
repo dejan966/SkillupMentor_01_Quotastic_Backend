@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, UseGuards } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post,
+  Body, 
+  Patch, 
+  Param, 
+  Delete, 
+  UseInterceptors,
+  ClassSerializerInterceptor, 
+  UseGuards 
+} from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
-import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
 import { User } from 'src/entities/user.entity';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';

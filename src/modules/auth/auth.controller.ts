@@ -1,4 +1,16 @@
-import { Controller, Post, Body, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req, UseGuards, Get } from '@nestjs/common';
+import { 
+  Controller, 
+  Post, 
+  Body, 
+  UseInterceptors, 
+  ClassSerializerInterceptor,
+  HttpCode, 
+  HttpStatus, 
+  Res, 
+  Req, 
+  UseGuards, 
+  Get 
+} from '@nestjs/common';
 import { Public } from 'src/decorators/public.decorator';
 import { Response } from 'express';
 import { User } from 'src/entities/user.entity';
@@ -8,9 +20,9 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { UserData } from 'src/interfaces/user.interface';
-import { ApiBody } from '@nestjs/swagger';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { NotAuthGuard } from './guards/not-auth.guard';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -29,27 +41,12 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard, NotAuthGuard)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-          example: 'email@gmail.com',
-        },
-        password: {
-          type: 'string',
-          example: 'Spikerfon4',
-        },
-      },
-    },
-  })
   async login(@Req() req: RequestWithUser, @Res() res: Response): Promise<void> {
     return this.authService.login(req.user, res);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('signout')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async signout(@GetCurrentUser() userData: User, @Res() res: Response): Promise<void> {
     return this.authService.signout(userData.id, res);
