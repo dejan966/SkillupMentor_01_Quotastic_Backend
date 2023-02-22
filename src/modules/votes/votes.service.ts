@@ -13,54 +13,61 @@ export class VotesService {
   constructor(
     @InjectRepository(Vote)
     private readonly votesRepository: Repository<Vote>,
-    private readonly quotesService: QuotesService
+    private readonly quotesService: QuotesService,
   ) {}
 
-  async createVote(value: boolean, user: User, quoteId: number){
+  async createVote(value: boolean, user: User, quoteId: number) {
     try {
-      const quote = await this.quotesService.findById(quoteId)
-      const newVote = this.votesRepository.create({ value, user, quote }) as Vote
+      const vote = (await this.findUserVote(user, quoteId)) as Vote;
+      if (vote) { //not null
+        if (vote.value === value) {
+          return this.delete(vote.id).then(() => {
+            const karma = value ? vote.quote.karma - 1 : vote.quote.karma + 1;
+            return this.quotesService.update(vote.quote.id, { karma });
+          });
+        }
+        return this.update(vote.id).then(() => {
+          const karma = value ? vote.quote.karma + 2 : vote.quote.karma - 2;
+          return this.quotesService.update(vote.quote.id, { karma });
+        });
+      }
+      const quote = await this.quotesService.findById(quoteId);
+      const newVote = this.votesRepository.create({ value, user, quote }) as Vote;
       return this.votesRepository.save(newVote).then(() => {
-        const karma = value ? newVote.quote.karma + 1 : newVote.quote.karma - 1
-        return this.quotesService.update(newVote.quote.id, {karma})
-      })
+        const karma = value ? newVote.quote.karma + 1 : newVote.quote.karma - 1;
+        return this.quotesService.update(newVote.quote.id, { karma });
+      });
     } catch (error) {
-      Logging.error(error)
-      throw new BadRequestException('Something went wrong while voting')
+      console.log(error);
+      throw new BadRequestException('Something went wrong while voting');
     }
   }
 
-  async findAllUsersVotes():Promise<Vote[]> {
-    return this.votesRepository.find({relations:['user', 'quote']})
+  async findOne(value: boolean, user: User, quoteId: number): Promise<Vote> {
+    //const quote = await this.quotesService.findById(quoteId)
+    //const vote = await this.votesRepository.findOne({where:{value, user, quote}}) as Vote //null
+    const vote = await this.votesRepository.findOne({ where: { value, user: { email: user.email }, quote: { id: quoteId } }, relations: ['user', 'quote'] });
+    return vote;
   }
 
-  async findUserVote(user:User, quote:Quote){
-    const getVote = this.votesRepository.findOne({where : {user, quote},  relations:['quote.votes']})
-    return getVote
-  }
-  
-  async voting(value: boolean, user: User, quote: Quote){
-    const getVote = await this.findUserVote(user, quote)
-    if(getVote){
-      if(getVote.value === value) return this.delete(getVote.id).then(() => {
-          const karma = value ? getVote.quote.karma - 1 : getVote.quote.karma + 1
-          return this.quotesService.update(getVote.quote.id, {karma})
-      })
-      return this.update(getVote.id).then(() => {
-          const karma = value ? getVote.quote.karma + 2 : getVote.quote.karma - 2
-          return this.quotesService.update(getVote.quote.id, {karma})
-      }) 
-    }
+  async findAllUsersVotes(): Promise<Vote[]> {
+    return this.votesRepository.find({ relations: ['user', 'quote'] });
   }
 
-  async update(id: number){
-    const vote = await this.votesRepository.findOne({where : {id}})
-    vote.value = !vote.value
-    return await this.votesRepository.save(vote)
+  async findUserVote(user: User, quoteId: number) {
+    const getVote = await this.votesRepository.findOne({ where: { user: { email: user.email }, quote: { id: quoteId } }, relations: ['user', 'quote'] });
+    console.log(getVote);
+    return getVote;
+  }
+
+  async update(id: number) {
+    const vote = await this.votesRepository.findOne({ where: { id } });
+    vote.value = !vote.value;
+    return await this.votesRepository.save(vote);
   }
 
   async delete(id: number) {
-    const vote = await this.votesRepository.findOne({ where: { id }})
-    return this.votesRepository.remove(vote)
+    const vote = await this.votesRepository.findOne({ where: { id } });
+    return this.votesRepository.remove(vote);
   }
 }

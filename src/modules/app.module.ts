@@ -19,13 +19,13 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     UsersModule,
     AuthModule,
     QuotesModule,
-    VotesModule
+    VotesModule,
   ],
   controllers: [AppController],
   providers: [
     {
-      provide: APP_INTERCEPTOR, 
-      useClass: ClassSerializerInterceptor
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
     },
     AppService,
   ],

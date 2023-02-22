@@ -1,14 +1,14 @@
-import { Request } from '@nestjs/common'
-import { User } from '../entities/user.entity'
+import { Request } from '@nestjs/common';
+import { User } from '../entities/user.entity';
 
 export interface TokenPayload {
-  name: string
-  sub: number
-  type: JwtType
+  name: string;
+  sub: number;
+  type: JwtType;
 }
 
 export interface RequestWithUser extends Request {
-  user: User
+  user: User;
 }
 
 export enum JwtType {

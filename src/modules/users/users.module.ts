@@ -10,10 +10,10 @@ import { JwtService } from '@nestjs/jwt';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService, JwtService],
-  exports: [UsersService]
+  exports: [UsersService],
 })
 export class UsersModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CurrentUserMiddleware).forRoutes('*')
+    consumer.apply(CurrentUserMiddleware).forRoutes('*');
   }
 }

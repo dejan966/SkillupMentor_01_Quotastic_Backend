@@ -1,6 +1,6 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class UpdateQuoteDto {
-    quote?:string
-    karma?:number
+  quote?: string;
+  karma?: number;
 }

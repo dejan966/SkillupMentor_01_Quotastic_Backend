@@ -5,35 +5,35 @@ import { Vote } from './vote.entity';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id:number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ nullable: true })
-    first_name:string
+  @Column({ nullable: true })
+  first_name: string;
 
-    @Column({ nullable: true })
-    last_name:string
+  @Column({ nullable: true })
+  last_name: string;
 
-    @Column({ unique: true })
-    email:string
+  @Column({ unique: true })
+  email: string;
 
-    @Column()
-    @Exclude()
-    password:string
+  @Column()
+  @Exclude()
+  password: string;
 
-    @Column({default:'default-avatar.png'})
-    avatar: string
+  @Column({ default: 'default-avatar.png' })
+  avatar: string;
 
-    @Column({default:true})
-    isActive:boolean
+  @Column({ default: true })
+  isActive: boolean;
 
-    @Column({ nullable: true, default: null })
-    @Exclude()
-    refresh_token: string
+  @Column({ nullable: true, default: null })
+  @Exclude()
+  refresh_token: string;
 
-    @OneToMany(() => Quote, quote=>quote.user)
-    quotes: Quote[]
+  @OneToMany(() => Quote, (quote) => quote.user)
+  quotes: Quote[];
 
-    @OneToMany(() => Vote, vote=>vote.user)
-    votes: Vote[]
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[];
 }

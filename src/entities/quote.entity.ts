@@ -4,21 +4,21 @@ import { Vote } from './vote.entity';
 
 @Entity()
 export class Quote {
-    @PrimaryGeneratedColumn()
-    id:number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({default: 0})
-    karma:number
+  @Column({ default: 0 })
+  karma: number;
 
-    @Column()
-    quote:string;
-    
-    @CreateDateColumn()
-    posted_when: string
+  @Column()
+  quote: string;
 
-    @ManyToOne(() => User, user=>user.quotes, { onDelete: 'SET NULL' })
-    user: User
+  @CreateDateColumn()
+  posted_when: string;
 
-    @OneToMany(()=> Vote, vote=>vote.quote,)
-    votes: Vote[]
+  @ManyToOne(() => User, (user) => user.quotes, { onDelete: 'SET NULL' })
+  user: User;
+
+  @OneToMany(() => Vote, (vote) => vote.quote)
+  votes: Vote[];
 }

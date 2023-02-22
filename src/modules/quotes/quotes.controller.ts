@@ -1,15 +1,4 @@
-import { 
-  Controller,
-   Get, 
-   Post, 
-   Body, 
-   Patch, 
-   Param, 
-   Delete, 
-   UseInterceptors,
-   ClassSerializerInterceptor,
-   UseGuards
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, UseGuards } from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
@@ -26,7 +15,7 @@ export class QuotesController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() createQuoteDto: CreateQuoteDto, @GetCurrentUser() user:User) {
+  async create(@Body() createQuoteDto: CreateQuoteDto, @GetCurrentUser() user: User) {
     return this.quotesService.create(createQuoteDto, user);
   }
 
@@ -37,8 +26,8 @@ export class QuotesController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async findAllCurrUserQuotes(@GetCurrentUser() user:User) {
-   return user.quotes;
+  async findAllCurrUserQuotes(@GetCurrentUser() user: User) {
+    return user.quotes;
   }
 
   @Get(':id')

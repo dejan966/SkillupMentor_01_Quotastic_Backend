@@ -9,6 +9,6 @@ import { Quote } from 'src/entities/quote.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Vote]), TypeOrmModule.forFeature([Quote])],
   controllers: [VotesController],
-  providers: [VotesService, QuotesService]
+  providers: [VotesService, QuotesService],
 })
 export class VotesModule {}

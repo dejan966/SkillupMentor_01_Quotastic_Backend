@@ -4,15 +4,15 @@ import { User } from './user.entity';
 
 @Entity()
 export class Vote {
-    @PrimaryGeneratedColumn()
-    id:number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({default:false})
-    value:boolean
+  @Column({ default: false })
+  value: boolean;
 
-    @ManyToOne(() => Quote, quote=>quote.votes, { onDelete: 'SET NULL' })
-    quote: Quote
+  @ManyToOne(() => Quote, (quote) => quote.votes, { onDelete: 'SET NULL' })
+  quote: Quote;
 
-    @ManyToOne(() => User, user=>user.votes, { onDelete: 'SET NULL' })
-    user: User
+  @ManyToOne(() => User, (user) => user.votes, { onDelete: 'SET NULL' })
+  user: User;
 }
