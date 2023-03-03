@@ -32,8 +32,8 @@ export class UsersService {
     return await this.usersRepository.find({relations:['quote.user', 'vote.user'], });
   }
 
-  async findById(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }, relations: ['quotes.votes.user', 'votes.quote']});
+  async findById(id: number) {
+    const user = await this.usersRepository.findOne({ where: { id }, relations: ['quotes.votes.user', 'votes.quote']}) as User;
     return user;
   }
 
@@ -74,11 +74,12 @@ export class UsersService {
     }
   }
 
-  async updateUserImageId(user: User, updateUserDto: {avatar:string}): Promise<User> {
-    if (updateUserDto.avatar === user.avatar) {
+  async updateUserImageId(id:number, avatar:string): Promise<User> {
+    const user = await this.findById(id)
+    if (avatar === user.avatar) {
       throw new BadRequestException('Avatars have to be different.');
     }
-    user.avatar = updateUserDto.avatar;
+    user.avatar = avatar;
     return this.usersRepository.save(user);
   }
 }

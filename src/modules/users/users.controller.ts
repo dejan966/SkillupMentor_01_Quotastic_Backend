@@ -10,7 +10,9 @@ import {
   ClassSerializerInterceptor, 
   HttpCode, 
   HttpStatus, 
-  UseGuards
+  UseGuards,
+  BadRequestException,
+  UploadedFile
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,7 +20,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from 'src/entities/user.entity';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { UserData } from 'src/interfaces/user.interface';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { join } from 'path';
+//import { saveImageToStorage, isFileExtensionSafe, removeFile } from 'src/helpers/imageStorage';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -30,6 +34,23 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
+
+/*   @Post('upload/:id')
+  @UseInterceptors(FileInterceptor('avatar', saveImageToStorage))
+  @HttpCode(HttpStatus.CREATED)
+  async upload(@UploadedFile() file: Express.Multer.File, @Param('id') id: number): Promise<User> {
+    const filename = file?.filename
+
+    if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg')
+
+    const imagesFolderPath = join(process.cwd(), 'uploads')
+    const fullImagePath = join(imagesFolderPath + '/' + file.filename)
+    if (await isFileExtensionSafe(fullImagePath)) {
+      return this.usersService.updateUserImageId(id, filename)
+    }
+    removeFile(fullImagePath)
+    throw new BadRequestException('File content does not match extension!')
+  } */
 
   @Get()
   async findAll() {
@@ -59,11 +80,11 @@ export class UsersController {
     return this.usersService.updatePassword(user, updateUserDto);
   }
 
-  @Patch('/me/update-avatar')
+/*   @Patch('/me/update-avatar')
   @UseGuards(JwtAuthGuard)
-  async updateAvatar(@GetCurrentUser() user: User, @Body() updateUserDto:{avatar:string}) {
-    return this.usersService.updateUserImageId(user, updateUserDto);
-  }
+  async updateAvatar(id:number, @Body() updateUserDto:{avatar:string}) {
+    return this.usersService.updateUserImageId(id, updateUserDto);
+  } */
 
   @Delete(':id')
   async remove(@Param('id') id: number) {

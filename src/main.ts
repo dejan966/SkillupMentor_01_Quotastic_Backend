@@ -4,6 +4,9 @@ import * as cookieparser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './modules/app.module';
 
+const express = require('express');
+const path = require('path')
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
@@ -14,6 +17,11 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieparser());
+  
+  const dirname = path.resolve();
+  app.use('/uploads', express.static(path.join(dirname, '/uploads')))
+  
+  //app.use(express.static('public'))
 
   const config = new DocumentBuilder().setTitle('Quoastic').setDescription('This is the Quotastic app').setVersion('1.0.0').build();
 
