@@ -30,14 +30,30 @@ export class QuotesController {
   }
 
   @Get()
-  async findAll() {
-    return this.quotesService.findAll();
+  async findQuotes() {
+    return this.quotesService.findMostUpvotedQuotes();
+  }
+
+  @Get('recent')
+  async findRecentQuotes() {
+    return this.quotesService.findMostRecentQuotes();
   }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async findAllCurrUserQuotes(@GetCurrentUser() user: User) {
-    return user.quotes;
+    return this.quotesService.findCurrUserQuotes(user);
+  }
+
+  @Get('users/:id')
+  @UseGuards(JwtAuthGuard)
+  async findAllUserQuotes(@Param('id') userId: number) {
+    return this.quotesService.findUserQuotes(userId);
+  }
+
+  @Get('random')
+  async findRandomQuote() {
+    return this.quotesService.findRandomQuote();
   }
 
   @Get(':id')

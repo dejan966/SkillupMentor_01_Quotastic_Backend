@@ -51,11 +51,4 @@ export class AuthController {
   async signout(@GetCurrentUser() userData: User, @Res() res: Response): Promise<void> {
     return this.authService.signout(userData.id, res);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  @HttpCode(HttpStatus.OK)
-  async getCurrentUser(@GetCurrentUser() user: User): Promise<UserData> {
-    return user;
-  }
 }

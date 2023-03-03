@@ -25,23 +25,41 @@ export class QuotesService {
     }
   }
 
-  async findAll(): Promise<Quote[]> {
-    return await this.quotesRepository.find({ relations: ['user'] });
+  async findMostUpvotedQuotes() {
+    return await this.quotesRepository.find({ relations: ['user', 'votes.user'], order:{karma:"DESC"} });
+  }
+
+  async findMostRecentQuotes(): Promise<Quote[]> {
+    return await this.quotesRepository.find({ relations: ['user', 'votes.user'], order:{posted_when:"DESC"} });
   }
 
   async findUserQuote(user: User, quote: string): Promise<Quote> {
-    const userQuote = this.quotesRepository.findOne({ where: { user, quote }, relations: ['user', 'votes'] });
+    const userQuote = this.quotesRepository.findOne({ where: { user, quote }, relations: ['user', 'votes.user'] });
     return userQuote;
+  }
+
+  async findUserQuotes(userId:number){
+    const userQuotes = await this.quotesRepository.find({ where: { user:{id:userId} }, relations: ['user', 'votes.user'], order:{posted_when:"DESC"} });
+    return userQuotes;
+  }
+
+  async findCurrUserQuotes(user:User) {
+    const userQuotes = await this.quotesRepository.find({ where: { user:{id:user.id} }, relations: ['user'], order:{posted_when:"DESC"} });
+    return userQuotes;
   }
 
   async findById(id: number): Promise<Quote> {
     try {
-      const quote = await this.quotesRepository.findOneOrFail({ where: { id }, relations: ['user', 'votes'] });
+      const quote = await this.quotesRepository.findOneOrFail({ where: { id }, relations: ['user', 'votes.quote']});
       return quote;
     } catch (error) {
-      Logging.log(error)
+      Logging.error(error)
       throw new NotFoundException(`Unable to find a quote with an id of ${id}.`);
     }
+  }
+
+  async findRandomQuote():Promise<Quote>{
+    return await this.quotesRepository.createQueryBuilder("quote").innerJoinAndSelect("quote.user", "user").innerJoinAndSelect("quote.votes", "vote").innerJoinAndSelect("vote.user", "user2").orderBy('RANDOM()').getOne()
   }
 
   async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {

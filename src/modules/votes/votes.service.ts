@@ -16,8 +16,7 @@ export class VotesService {
 
   async createVote(value: boolean, user: User, quoteId: number) {
     try {
-      const vote = (await this.findUserVote(user, quoteId)) as Vote;
-      //not null
+      const vote = (await this.findUserQuoteVote(user, quoteId)) as Vote;
       if (vote) { 
         if (vote.value === value) {
           return this.delete(vote.id).then(() => {
@@ -43,17 +42,23 @@ export class VotesService {
   }
 
   async findOne(value: boolean, user: User, quoteId: number): Promise<Vote> {
-    //const quote = await this.quotesService.findById(quoteId)
-    //const vote = await this.votesRepository.findOne({where:{value, user, quote}}) as Vote //null
     const vote = await this.votesRepository.findOne({ where: { value, user: { email: user.email }, quote: { id: quoteId } }, relations: ['user', 'quote'] });
     return vote;
   }
 
-  async findAllUsersVotes(): Promise<Vote[]> {
+  async findAllUserVotes(userId: number){
+    return this.votesRepository.find({ where:{user:{id:userId}}, relations: ['quote.user'] });
+  }
+
+  async findAllCurrUserVotes(user: User){
+    return this.votesRepository.find({ where:{user: {id:user.id}, value:true}, relations: ['quote.user'] });
+  }
+
+  async findAllUsersVotes(){
     return this.votesRepository.find({ relations: ['user', 'quote'] });
   }
 
-  async findUserVote(user: User, quoteId: number):Promise<Vote> {
+  async findUserQuoteVote(user: User, quoteId: number):Promise<Vote> {
     const getVote = await this.votesRepository.findOne({ where: { 
       user: { email: user.email },
       quote: { id: quoteId } }, 

@@ -28,12 +28,12 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+  async findAll() {
+    return await this.usersRepository.find({relations:['quote.user', 'vote.user'], });
   }
 
   async findById(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }, relations: ['quotes', 'votes', 'votes.quote'] });
+    const user = await this.usersRepository.findOne({ where: { id }, relations: ['quotes.votes.user', 'votes.quote']});
     return user;
   }
 
@@ -54,15 +54,11 @@ export class UsersService {
     }
   }
 
-  async updatePassword(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
+  async updatePassword(user: User, updateUserDto: {current_password: string, password:string, confirm_password:string}): Promise<User> {
     if (updateUserDto.password && updateUserDto.confirm_password) {
-      if (updateUserDto.password !== updateUserDto.confirm_password) {
-        throw new BadRequestException('Passwords do not match.');
-      }
-      if (await compareHash(updateUserDto.password, user.password)) {
-        throw new BadRequestException('New password cannot be the same as old password.');
-      }
+      if(!await compareHash(updateUserDto.current_password, user.password)) throw new BadRequestException('Incorrect current password')
+      if (updateUserDto.password !== updateUserDto.confirm_password) throw new BadRequestException('Passwords do not match.')
+      if (await compareHash(updateUserDto.password, user.password)) throw new BadRequestException('New password cannot be the same as old password.')
       user.password = await hash(updateUserDto.password);
     }
     return this.usersRepository.save(user);
@@ -78,12 +74,11 @@ export class UsersService {
     }
   }
 
-  async updateUserImageId(id: number, avatar: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
-    if (avatar === user.avatar) {
+  async updateUserImageId(user: User, updateUserDto: {avatar:string}): Promise<User> {
+    if (updateUserDto.avatar === user.avatar) {
       throw new BadRequestException('Avatars have to be different.');
     }
-    user.avatar = avatar;
+    user.avatar = updateUserDto.avatar;
     return this.usersRepository.save(user);
   }
 }

@@ -30,6 +30,11 @@ export class VotesController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async findAllCurrUserVotes(@GetCurrentUser() user: User) {
-    return user.votes;
+    return this.votesService.findAllCurrUserVotes(user);
+  
+  }
+  @Get('users/:id')
+  async findAllUserVotes(@Param('id') id: number) {
+    return this.votesService.findAllUserVotes(id);
   }
 }

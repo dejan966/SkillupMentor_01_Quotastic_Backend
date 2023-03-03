@@ -9,12 +9,16 @@ import {
   UseInterceptors, 
   ClassSerializerInterceptor, 
   HttpCode, 
-  HttpStatus 
+  HttpStatus, 
+  UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from 'src/entities/user.entity';
+import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { UserData } from 'src/interfaces/user.interface';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -32,6 +36,13 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getCurrentUser(@GetCurrentUser() user: User){
+    return user;
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.usersService.findById(id);
@@ -42,14 +53,16 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  @Patch(':id')
-  async updatePassword(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updatePassword(id, updateUserDto);
+  @Patch('/me/update-password')
+  @UseGuards(JwtAuthGuard)
+  async updatePassword(@GetCurrentUser() user: User, @Body() updateUserDto: {current_password: string, password:string, confirm_password:string}) {
+    return this.usersService.updatePassword(user, updateUserDto);
   }
 
-  @Patch(':id')
-  async updateAvatar(@Param('id') id: number, newAvatar: string) {
-    return this.usersService.updateUserImageId(id, newAvatar);
+  @Patch('/me/update-avatar')
+  @UseGuards(JwtAuthGuard)
+  async updateAvatar(@GetCurrentUser() user: User, @Body() updateUserDto:{avatar:string}) {
+    return this.usersService.updateUserImageId(user, updateUserDto);
   }
 
   @Delete(':id')
