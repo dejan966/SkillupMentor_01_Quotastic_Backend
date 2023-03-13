@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, OneToMany, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Vote } from './vote.entity';
 
@@ -16,8 +16,11 @@ export class Quote {
   @CreateDateColumn()
   posted_when: string;
 
+  @Column()
+  userId: number;
   @ManyToOne(() => User, (user) => user.quotes, { onDelete: 'SET NULL' })
-  user: User;
+  @JoinColumn({ name: 'userId' })
+  user: User
 
   @OneToMany(() => Vote, (vote) => vote.quote)
   votes: Vote[];

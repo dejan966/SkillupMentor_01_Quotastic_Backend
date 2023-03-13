@@ -21,10 +21,8 @@ async function bootstrap() {
   
   const dirname = path.resolve();
   app.use('/uploads', express.static(path.join(dirname, '/uploads')))
-  
-  //app.use(express.static('public'))
 
-  const config = new DocumentBuilder().setTitle('Quoastic').setDescription('This is the Quotastic app').setVersion('1.0.0').build();
+  const config = new DocumentBuilder().setTitle('Quotastic').setDescription('This is the Quotastic app').setVersion('1.0.0').build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);

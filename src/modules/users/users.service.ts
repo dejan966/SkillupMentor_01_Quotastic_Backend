@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Quote } from 'src/entities/quote.entity';
 import { User } from 'src/entities/user.entity';
+import { Vote } from 'src/entities/vote.entity';
 import Logging from 'src/library/Logging';
 import { compareHash, hash } from 'src/modules/utils/bcrypt';
-import { Repository } from 'typeorm';
+import { NotBrackets, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -39,6 +41,16 @@ export class UsersService {
 
   async findBy(condition): Promise<User> {
     return this.usersRepository.findOne({ where: condition });
+  }
+  
+  async userQuotes(userId:number){
+    return await this.usersRepository.createQueryBuilder("user").innerJoin(Vote, 'vote', 'vote.user.id = user.id').innerJoin(Quote, 'quote', 'quote.id=vote.quote.id').innerJoin(Quote, 'quote2', 'quote2.user.id=user.id').select("COUNT(DISTINCT(vote.*)) as quotesUpvoted, COUNT(quote2.*) as userQuotes").where("user.id = :userId", {userId}).andWhere("vote.value = :value", {value:true}).getRawOne()
+  }
+
+  async userUpvotes(userId:number){
+    return await this.usersRepository.createQueryBuilder("user").innerJoin(Vote, 'vote', 'vote.user.id = user.id').innerJoin(Quote, 'quote', 'quote.id=vote.quote.id').innerJoin(User, 'user2', 'user2.id=vote.user.id').select("COUNT(user2.*)", "quoteUpvotes").where("vote.value = :value", {value:true}).andWhere(new NotBrackets((qb)=>{
+      qb.where({id: userId})
+    })).getRawOne()
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

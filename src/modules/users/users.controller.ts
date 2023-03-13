@@ -59,9 +59,30 @@ export class UsersController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   async getCurrentUser(@GetCurrentUser() user: User){
     return user;
+  }
+
+  @Get('me/upvoted')
+  @UseGuards(JwtAuthGuard)
+  async currUserUpvoted(@GetCurrentUser() user: User){
+    return this.usersService.userQuotes(user.id)
+  }
+
+  @Get('me/upvotes')
+  @UseGuards(JwtAuthGuard)
+  async currUserUpvotes(@GetCurrentUser() user: User){
+    return this.usersService.userUpvotes(user.id)
+  }
+
+  @Get('upvoted/:id')
+  async userUpvoted(@Param('id') userId: number){
+    return this.usersService.userQuotes(userId)
+  }
+
+  @Get('upvotes/:id')
+  async userUpvotes(@Param('id') userId: number){
+    return this.usersService.userUpvotes(userId)
   }
 
   @Get(':id')
@@ -79,6 +100,8 @@ export class UsersController {
   async updatePassword(@GetCurrentUser() user: User, @Body() updateUserDto: {current_password: string, password:string, confirm_password:string}) {
     return this.usersService.updatePassword(user, updateUserDto);
   }
+
+  
 
 /*   @Patch('/me/update-avatar')
   @UseGuards(JwtAuthGuard)

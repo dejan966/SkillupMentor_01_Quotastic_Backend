@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Quote } from './quote.entity';
 import { User } from './user.entity';
 
@@ -10,9 +10,16 @@ export class Vote {
   @Column({ default: false })
   value: boolean;
 
-  @ManyToOne(() => Quote, (quote) => quote.votes, { onDelete: 'SET NULL' })
+
+  @Column()
+  quoteId: number;
+  @ManyToOne(() => Quote, (quote) => quote.votes)
+  @JoinColumn({name:"quoteId"})
   quote: Quote;
 
+  @Column()
+  userId: number;
   @ManyToOne(() => User, (user) => user.votes, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'userId' })
   user: User;
 }

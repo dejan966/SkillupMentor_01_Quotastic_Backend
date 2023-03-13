@@ -21,7 +21,7 @@ export class User {
   @Exclude()
   password: string;
 
-  @Column({ default: 'default-avatar.png' })
+  @Column({ default: 'Blank-Avatar.png' })
   avatar: string;
 
   @Column({ default: true })
