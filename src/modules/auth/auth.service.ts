@@ -118,7 +118,7 @@ export class AuthService {
         case JwtType.REFRESH_TOKEN:
           token = await this.jwtService.signAsync(payload, {
             secret: this.configService.get('JWT_REFRESH_SECRET'),
-            expiresIn: `${this.configService.get('JWT_REFRESH_SECRET_EXPIRES')}s`,
+            //expiresIn: `${this.configService.get('JWT_REFRESH_SECRET_EXPIRES')}s`,
           });
           break;
         default:
@@ -156,7 +156,7 @@ export class AuthService {
   }
 
   getCookiesForSignOut(): string[] {
-    return ['access_token=${token}; HttpOnly; Path =/; Max-Age=;', 'refresh_token=; HttpOnly; Path =/; Max-Age=0'];
+    return ['access_token=; HttpOnly; Path =/; Max-Age=0;', 'refresh_token=; HttpOnly; Path =/; Max-Age=0'];
   }
 
   async getUserId(request: Request): Promise<number> {

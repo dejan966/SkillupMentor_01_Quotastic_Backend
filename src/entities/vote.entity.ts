@@ -10,16 +10,9 @@ export class Vote {
   @Column({ default: false })
   value: boolean;
 
-
-  @Column()
-  quoteId: number;
-  @ManyToOne(() => Quote, (quote) => quote.votes)
-  @JoinColumn({name:"quoteId"})
+  @ManyToOne(() => Quote, (quote) => quote.votes, { onDelete: 'SET NULL' })
   quote: Quote;
 
-  @Column()
-  userId: number;
   @ManyToOne(() => User, (user) => user.votes, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'userId' })
   user: User;
 }

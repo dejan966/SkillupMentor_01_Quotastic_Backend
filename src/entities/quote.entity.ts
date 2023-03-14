@@ -16,11 +16,8 @@ export class Quote {
   @CreateDateColumn()
   posted_when: string;
 
-  @Column()
-  userId: number;
   @ManyToOne(() => User, (user) => user.quotes, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'userId' })
-  user: User
+  user: User;
 
   @OneToMany(() => Vote, (vote) => vote.quote)
   votes: Vote[];

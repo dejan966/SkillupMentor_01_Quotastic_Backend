@@ -9,7 +9,6 @@ import {
   Res, 
   Req, 
   UseGuards, 
-  Get 
 } from '@nestjs/common';
 import { Public } from 'src/decorators/public.decorator';
 import { Response } from 'express';
@@ -19,10 +18,8 @@ import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
-import { UserData } from 'src/interfaces/user.interface';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { NotAuthGuard } from './guards/not-auth.guard';
-import { ApiBody } from '@nestjs/swagger';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
