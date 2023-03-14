@@ -118,7 +118,6 @@ export class AuthService {
         case JwtType.REFRESH_TOKEN:
           token = await this.jwtService.signAsync(payload, {
             secret: this.configService.get('JWT_REFRESH_SECRET'),
-            //expiresIn: `${this.configService.get('JWT_REFRESH_SECRET_EXPIRES')}s`,
           });
           break;
         default:
