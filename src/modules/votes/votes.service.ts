@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Vote } from 'src/entities/vote.entity';
 import Logging from 'src/library/Logging';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { QuotesService } from '../quotes/quotes.service';
 
 @Injectable()
@@ -47,15 +47,15 @@ export class VotesService {
   }
 
   async findAllUserVotes(userId: number){
-    return this.votesRepository.find({ where:{user:{id:userId}}, relations: ['quote.user'] });
+    return this.votesRepository.find({ where:{user:{id:userId}, quote:Not(IsNull())}, relations: ['quote.user'] });
   }
 
   async findAllCurrUserVotes(user: User){
-    return this.votesRepository.find({ where:{user: {id:user.id}, value:true}, relations: ['quote.user'] });
+    return this.votesRepository.find({ where:{user: {id:user.id}, value:true, quote: Not(IsNull())}, relations: ['quote.user'] });
   }
 
   async findAllUsersVotes(){
-    return this.votesRepository.find({ relations: ['user', 'quote'] });
+    return this.votesRepository.find({ where:{quote: Not(IsNull())}, relations: ['user', 'quote'] });
   }
 
   async findUserQuoteVote(user: User, quoteId: number):Promise<Vote> {

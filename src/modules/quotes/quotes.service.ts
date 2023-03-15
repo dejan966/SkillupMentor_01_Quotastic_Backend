@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from 'src/entities/quote.entity';
 import { User } from 'src/entities/user.entity';
 import Logging from 'src/library/Logging';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto'
 
@@ -59,7 +59,7 @@ export class QuotesService {
   }
 
   async findRandomQuote():Promise<Quote>{
-    return await this.quotesRepository.createQueryBuilder("quote").innerJoinAndSelect("quote.user", "user").innerJoinAndSelect("quote.votes", "vote").innerJoinAndSelect("vote.user", "user2").orderBy('RANDOM()').getOne()
+    return await this.quotesRepository.createQueryBuilder("quote").innerJoinAndSelect("quote.user", "user").leftJoinAndSelect("quote.votes", "vote").leftJoinAndSelect("vote.user", "user2").orderBy('RANDOM()').getOne()
   }
 
   async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {
