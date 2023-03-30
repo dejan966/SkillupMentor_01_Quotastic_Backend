@@ -8,12 +8,14 @@ import { AuthModule } from './auth/auth.module';
 import { AppService } from './app.service';
 import { VotesModule } from './votes/votes.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { configValidationSchema } from 'config/schema.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env'],
+      validationSchema: configValidationSchema
     }),
     DatabaseModule,
     UsersModule,

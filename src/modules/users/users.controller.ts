@@ -17,12 +17,12 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from 'src/entities/user.entity';
-import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
+import { User } from 'entities/user.entity';
+import { GetCurrentUser } from 'decorators/get-current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
-import { saveImageToStorage, isFileExtensionSafe, removeFile } from 'src/helpers/imageStorage';
+import { saveImageToStorage, isFileExtensionSafe, removeFile } from 'helpers/imageStorage';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,7 +35,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-@Post('upload/:id')
+  @Post('upload/:id')
   @UseInterceptors(FileInterceptor('avatar', saveImageToStorage))
   @HttpCode(HttpStatus.CREATED)
   async upload(@UploadedFile() file: Express.Multer.File, @Param('id') id: number): Promise<User> {
@@ -50,7 +50,7 @@ export class UsersController {
     }
     removeFile(fullImagePath)
     throw new BadRequestException('File content does not match extension!')
-  } 
+  }
 
   @Get()
   async findAll() {

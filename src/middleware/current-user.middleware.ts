@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
-import { UsersService } from 'src/modules/users/users.service';
+import { UsersService } from 'modules/users/users.service';
 
 declare global {
   namespace Express {

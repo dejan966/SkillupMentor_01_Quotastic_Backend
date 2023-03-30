@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Quote } from 'src/entities/quote.entity';
-import { User } from 'src/entities/user.entity';
-import { Vote } from 'src/entities/vote.entity';
-import Logging from 'src/library/Logging';
-import { compareHash, hash } from 'src/modules/utils/bcrypt';
+import { Quote } from 'entities/quote.entity';
+import { User } from 'entities/user.entity';
+import { Vote } from 'entities/vote.entity';
+import Logging from 'library/Logging';
+import { compareHash, hash } from 'utils/bcrypt';
 import { NotBrackets, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -54,10 +54,11 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const {password, confirm_password,...rest} = updateUserDto
     const user = await this.findById(id);
     try {
       for (const key in user) {
-        if (updateUserDto[key]) user[key] = updateUserDto[key];
+        if (rest[key]) user[key] = rest[key];
       }
       return this.usersRepository.save(user);
     } catch (error) {

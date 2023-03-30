@@ -1,14 +1,14 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/entities/user.entity';
+import { User } from 'entities/user.entity';
 import { Request, Response } from 'express';
-import { PostgresErrorCode } from 'src/helpers/postgresErrorCode.enum';
-import { CookieType, JwtType, TokenPayload } from 'src/interfaces/auth.interface';
-import { UserData } from 'src/interfaces/user.interface';
-import Logging from 'src/library/Logging';
+import { PostgresErrorCode } from 'helpers/postgresErrorCode.enum';
+import { CookieType, JwtType, TokenPayload } from 'interfaces/auth.interface';
+import { UserData } from 'interfaces/user.interface';
+import Logging from 'library/Logging';
 import { UsersService } from '../users/users.service';
-import { compareHash, hash } from '../utils/bcrypt';
+import { compareHash, hash } from '../../utils/bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Param, UseGuards, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
-import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
-import { User } from 'src/entities/user.entity';
+import { GetCurrentUser } from 'decorators/get-current-user.decorator';
+import { User } from 'entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { NotAuthorGuard } from '../auth/guards/not-author.guard';
 import { VotesService } from './votes.service';

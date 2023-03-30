@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
-import { Vote } from 'src/entities/vote.entity';
-import Logging from 'src/library/Logging';
+import { User } from 'entities/user.entity';
+import { Vote } from 'entities/vote.entity';
+import Logging from 'library/Logging';
 import { IsNull, Not, Repository } from 'typeorm';
 import { QuotesService } from '../quotes/quotes.service';
 
@@ -19,10 +19,9 @@ export class VotesService {
       const vote = (await this.findUserQuoteVote(user, quoteId)) as Vote;
       if (vote) { 
         if (vote.value === value) {
-          return this.delete(vote.id).then(() => {
-            const karma = value ? vote.quote.karma - 1 : vote.quote.karma + 1;
-            return this.quotesService.update(vote.quote.id, { karma });
-          });
+          const value = await this.delete(vote.id);
+          const karma = value ? vote.quote.karma - 1 : vote.quote.karma + 1;
+          return this.quotesService.update(vote.quote.id, { karma });
         }
         return this.update(vote.id).then(() => {
           const karma = value ? vote.quote.karma + 2 : vote.quote.karma - 2;

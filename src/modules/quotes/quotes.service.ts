@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Quote } from 'src/entities/quote.entity';
-import { User } from 'src/entities/user.entity';
-import Logging from 'src/library/Logging';
+import { Quote } from 'entities/quote.entity';
+import { User } from 'entities/user.entity';
+import Logging from 'library/Logging';
 import { IsNull, Not, Repository } from 'typeorm';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto'
