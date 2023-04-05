@@ -18,9 +18,10 @@ export class VotesService {
     try {
       const vote = (await this.findUserQuoteVote(user, quoteId)) as Vote;
       if (vote) { 
+        Logging.info(vote.value)
         if (vote.value === value) {
           const value = await this.delete(vote.id);
-          const karma = value ? vote.quote.karma - 1 : vote.quote.karma + 1;
+          const karma = value.value ? vote.quote.karma - 1 : vote.quote.karma + 1;
           return this.quotesService.update(vote.quote.id, { karma });
         }
         return this.update(vote.id).then(() => {
