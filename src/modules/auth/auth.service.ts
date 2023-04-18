@@ -7,8 +7,8 @@ import { PostgresErrorCode } from 'helpers/postgresErrorCode.enum';
 import { CookieType, JwtType, TokenPayload } from 'interfaces/auth.interface';
 import { UserData } from 'interfaces/user.interface';
 import Logging from 'library/Logging';
-import { UsersService } from '../users/users.service';
-import { compareHash, hash } from '../../utils/bcrypt';
+import { UsersService } from 'modules/users/users.service';
+import { compareHash, hash } from 'utils/bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()

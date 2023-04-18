@@ -1,15 +1,4 @@
-import { 
-  Controller, 
-  Post, 
-  Body, 
-  UseInterceptors, 
-  ClassSerializerInterceptor,
-  HttpCode, 
-  HttpStatus, 
-  Res, 
-  Req, 
-  UseGuards, 
-} from '@nestjs/common';
+import { Controller, Post, Body, UseInterceptors, ClassSerializerInterceptor, HttpCode, HttpStatus, Res, Req, UseGuards } from '@nestjs/common';
 import { Public } from 'decorators/public.decorator';
 import { Response } from 'express';
 import { User } from 'entities/user.entity';

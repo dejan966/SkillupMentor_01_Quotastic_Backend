@@ -31,30 +31,48 @@ export class UsersService {
   }
 
   async findAll() {
-    return await this.usersRepository.find({relations:['quote.user', 'vote.user'], });
+    return await this.usersRepository.find({ relations: ['quote.user', 'vote.user'] });
   }
 
   async findById(id: number) {
-    const user = await this.usersRepository.findOne({ where: { id }, relations: ['quotes.votes.user', 'votes.quote']}) as User;
+    const user = (await this.usersRepository.findOne({ where: { id }, relations: ['quotes.votes.user', 'votes.quote'] })) as User;
     return user;
   }
 
   async findBy(condition): Promise<User> {
     return this.usersRepository.findOne({ where: condition });
   }
-  
-  async userQuotes(userId:number){
-    return await this.usersRepository.createQueryBuilder("user").innerJoin(Vote, 'vote', 'vote.user.id = user.id').innerJoin(Quote, 'quote', 'quote.id=vote.quote.id').innerJoin(Quote, 'quote2', 'quote2.user.id=user.id').select("COUNT(DISTINCT(vote.*)) as quotesUpvoted, COUNT(quote2.*) as userQuotes").where("user.id = :userId", {userId}).andWhere("vote.value = :value", {value:true}).getRawOne()
+
+  async userQuotes(userId: number) {
+    return await this.usersRepository
+      .createQueryBuilder('user')
+      .innerJoin(Vote, 'vote', 'vote.user.id = user.id')
+      .innerJoin(Quote, 'quote', 'quote.id=vote.quote.id')
+      .innerJoin(Quote, 'quote2', 'quote2.user.id=user.id')
+      .select('COUNT(DISTINCT(vote.*)) as quotesUpvoted, COUNT(quote2.*) as userQuotes')
+      .where('user.id = :userId', { userId })
+      .andWhere('vote.value = :value', { value: true })
+      .getRawOne();
   }
 
-  async userUpvotes(userId:number){
-    return await this.usersRepository.createQueryBuilder("user").innerJoin(Vote, 'vote', 'vote.user.id = user.id').innerJoin(Quote, 'quote', 'quote.id=vote.quote.id').innerJoin(User, 'user2', 'user2.id=vote.user.id').select("COUNT(user2.*)", "quoteUpvotes").where("vote.value = :value", {value:true}).andWhere(new NotBrackets((qb)=>{
-      qb.where({id: userId})
-    })).getRawOne()
+  async userUpvotes(userId: number) {
+    return await this.usersRepository
+      .createQueryBuilder('user')
+      .innerJoin(Vote, 'vote', 'vote.user.id = user.id')
+      .innerJoin(Quote, 'quote', 'quote.id=vote.quote.id')
+      .innerJoin(User, 'user2', 'user2.id=vote.user.id')
+      .select('COUNT(user2.*)', 'quoteUpvotes')
+      .where('vote.value = :value', { value: true })
+      .andWhere(
+        new NotBrackets((qb) => {
+          qb.where({ id: userId });
+        }),
+      )
+      .getRawOne();
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const {password, confirm_password,...rest} = updateUserDto
+    const { password, confirm_password, ...rest } = updateUserDto;
     const user = await this.findById(id);
     try {
       for (const key in user) {
@@ -62,16 +80,16 @@ export class UsersService {
       }
       return this.usersRepository.save(user);
     } catch (error) {
-      Logging.log(error)
+      Logging.log(error);
       throw new NotFoundException('Something went wrong while updating the data.');
     }
   }
 
-  async updatePassword(user: User, updateUserDto: {current_password: string, password:string, confirm_password:string}): Promise<User> {
+  async updatePassword(user: User, updateUserDto: { current_password: string; password: string; confirm_password: string }): Promise<User> {
     if (updateUserDto.password && updateUserDto.confirm_password) {
-      if(!await compareHash(updateUserDto.current_password, user.password)) throw new BadRequestException('Incorrect current password')
-      if (updateUserDto.password !== updateUserDto.confirm_password) throw new BadRequestException('Passwords do not match.')
-      if (await compareHash(updateUserDto.password, user.password)) throw new BadRequestException('New password cannot be the same as old password.')
+      if (!(await compareHash(updateUserDto.current_password, user.password))) throw new BadRequestException('Incorrect current password');
+      if (updateUserDto.password !== updateUserDto.confirm_password) throw new BadRequestException('Passwords do not match.');
+      if (await compareHash(updateUserDto.password, user.password)) throw new BadRequestException('New password cannot be the same as old password.');
       user.password = await hash(updateUserDto.password);
     }
     return this.usersRepository.save(user);
@@ -87,8 +105,8 @@ export class UsersService {
     }
   }
 
-  async updateUserImageId(id:number, avatar:string): Promise<User> {
-    const user = await this.findById(id)
+  async updateUserImageId(id: number, avatar: string): Promise<User> {
+    const user = await this.findById(id);
     if (avatar === user.avatar) {
       throw new BadRequestException('Avatars have to be different.');
     }

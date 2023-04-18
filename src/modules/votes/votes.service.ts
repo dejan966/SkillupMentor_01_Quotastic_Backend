@@ -17,8 +17,7 @@ export class VotesService {
   async createVote(value: boolean, user: User, quoteId: number) {
     try {
       const vote = (await this.findUserQuoteVote(user, quoteId)) as Vote;
-      if (vote) { 
-        Logging.info(vote.value)
+      if (vote) {
         if (vote.value === value) {
           const value = await this.delete(vote.id);
           const karma = value.value ? vote.quote.karma - 1 : vote.quote.karma + 1;
@@ -46,23 +45,25 @@ export class VotesService {
     return vote;
   }
 
-  async findAllUserVotes(userId: number){
-    return this.votesRepository.find({ where:{user:{id:userId}, quote:Not(IsNull())}, relations: ['quote.user'] });
+  async findAllUserVotes(userId: number) {
+    return this.votesRepository.find({ where: { user: { id: userId }, quote: Not(IsNull()) }, relations: ['quote.user'] });
   }
 
-  async findAllCurrUserVotes(user: User){
-    return this.votesRepository.find({ where:{user: {id:user.id}, value:true, quote: Not(IsNull())}, relations: ['quote.user'] });
+  async findAllCurrUserVotes(user: User) {
+    return this.votesRepository.find({ where: { user: { id: user.id }, value: true, quote: Not(IsNull()) }, relations: ['quote.user'] });
   }
 
-  async findAllUsersVotes(){
-    return this.votesRepository.find({ where:{quote: Not(IsNull())}, relations: ['user', 'quote'] });
+  async findAllUsersVotes() {
+    return this.votesRepository.find({ where: { quote: Not(IsNull()) }, relations: ['user', 'quote'] });
   }
 
-  async findUserQuoteVote(user: User, quoteId: number):Promise<Vote> {
-    const getVote = await this.votesRepository.findOne({ where: { 
-      user: { email: user.email },
-      quote: { id: quoteId } }, 
-      relations: ['user', 'quote'] 
+  async findUserQuoteVote(user: User, quoteId: number): Promise<Vote> {
+    const getVote = await this.votesRepository.findOne({
+      where: {
+        user: { email: user.email },
+        quote: { id: quoteId },
+      },
+      relations: ['user', 'quote'],
     });
     return getVote;
   }

@@ -1,18 +1,18 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Patch, 
-  Param, 
-  Delete, 
-  UseInterceptors, 
-  ClassSerializerInterceptor, 
-  HttpCode, 
-  HttpStatus, 
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  HttpCode,
+  HttpStatus,
   UseGuards,
   BadRequestException,
-  UploadedFile
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -39,17 +39,17 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('avatar', saveImageToStorage))
   @HttpCode(HttpStatus.CREATED)
   async upload(@UploadedFile() file: Express.Multer.File, @Param('id') id: number): Promise<User> {
-    const filename = file?.filename
+    const filename = file?.filename;
 
-    if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg')
+    if (!filename) throw new BadRequestException('File must be a png, jpg/jpeg');
 
-    const imagesFolderPath = join(process.cwd(), 'uploads')
-    const fullImagePath = join(imagesFolderPath + '/' + file.filename)
+    const imagesFolderPath = join(process.cwd(), 'uploads');
+    const fullImagePath = join(imagesFolderPath + '/' + file.filename);
     if (await isFileExtensionSafe(fullImagePath)) {
-      return this.usersService.updateUserImageId(id, filename)
+      return this.usersService.updateUserImageId(id, filename);
     }
-    removeFile(fullImagePath)
-    throw new BadRequestException('File content does not match extension!')
+    removeFile(fullImagePath);
+    throw new BadRequestException('File content does not match extension!');
   }
 
   @Get()
@@ -59,30 +59,30 @@ export class UsersController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async getCurrentUser(@GetCurrentUser() user: User){
+  async getCurrentUser(@GetCurrentUser() user: User) {
     return user;
   }
 
   @Get('me/upvoted')
   @UseGuards(JwtAuthGuard)
-  async currUserUpvoted(@GetCurrentUser() user: User){
-    return this.usersService.userQuotes(user.id)
+  async currUserUpvoted(@GetCurrentUser() user: User) {
+    return this.usersService.userQuotes(user.id);
   }
 
   @Get('me/upvotes')
   @UseGuards(JwtAuthGuard)
-  async currUserUpvotes(@GetCurrentUser() user: User){
-    return this.usersService.userUpvotes(user.id)
+  async currUserUpvotes(@GetCurrentUser() user: User) {
+    return this.usersService.userUpvotes(user.id);
   }
 
   @Get('upvoted/:id')
-  async userUpvoted(@Param('id') userId: number){
-    return this.usersService.userQuotes(userId)
+  async userUpvoted(@Param('id') userId: number) {
+    return this.usersService.userQuotes(userId);
   }
 
   @Get('upvotes/:id')
-  async userUpvotes(@Param('id') userId: number){
-    return this.usersService.userUpvotes(userId)
+  async userUpvotes(@Param('id') userId: number) {
+    return this.usersService.userUpvotes(userId);
   }
 
   @Get(':id')
@@ -97,17 +97,9 @@ export class UsersController {
 
   @Patch('/me/update-password')
   @UseGuards(JwtAuthGuard)
-  async updatePassword(@GetCurrentUser() user: User, @Body() updateUserDto: {current_password: string, password:string, confirm_password:string}) {
+  async updatePassword(@GetCurrentUser() user: User, @Body() updateUserDto: { current_password: string; password: string; confirm_password: string }) {
     return this.usersService.updatePassword(user, updateUserDto);
   }
-
-  
-
-/*   @Patch('/me/update-avatar')
-  @UseGuards(JwtAuthGuard)
-  async updateAvatar(id:number, @Body() updateUserDto:{avatar:string}) {
-    return this.usersService.updateUserImageId(id, updateUserDto);
-  } */
 
   @Delete(':id')
   async remove(@Param('id') id: number) {

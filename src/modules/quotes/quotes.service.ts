@@ -4,15 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from 'entities/quote.entity';
 import { User } from 'entities/user.entity';
 import Logging from 'library/Logging';
-import { IsNull, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateQuoteDto } from './dto/create-quote.dto';
-import { UpdateQuoteDto } from './dto/update-quote.dto'
+import { UpdateQuoteDto } from './dto/update-quote.dto';
 
 @Injectable()
 export class QuotesService {
   constructor(
     @InjectRepository(Quote)
-    private readonly quotesRepository: Repository<Quote>
+    private readonly quotesRepository: Repository<Quote>,
   ) {}
 
   async create(createQuoteDto: CreateQuoteDto, user: User): Promise<Quote> {
@@ -25,12 +25,16 @@ export class QuotesService {
     }
   }
 
+  async findAllQuotes() {
+    return await this.quotesRepository.find({ relations: ['user', 'votes.user'] });
+  }
+
   async findMostUpvotedQuotes() {
-    return await this.quotesRepository.find({ relations: ['user', 'votes.user'], order:{karma:"DESC"} });
+    return await this.quotesRepository.find({ relations: ['user', 'votes.user'], order: { karma: 'DESC' } });
   }
 
   async findMostRecentQuotes(): Promise<Quote[]> {
-    return await this.quotesRepository.find({ relations: ['user', 'votes.user'], order:{posted_when:"DESC"} });
+    return await this.quotesRepository.find({ relations: ['user', 'votes.user'], order: { posted_when: 'DESC' } });
   }
 
   async findUserQuote(user: User, quote: string): Promise<Quote> {
@@ -38,28 +42,39 @@ export class QuotesService {
     return userQuote;
   }
 
-  async findUserQuotes(userId:number){
-    const userQuotes = await this.quotesRepository.find({ where: { user:{id:userId} }, relations: ['user', 'votes.user'], order:{posted_when:"DESC"} });
+  async findUserMostRecentQuotes(userId: number) {
+    const userQuotes = await this.quotesRepository.find({ where: { user: { id: userId } }, relations: ['user', 'votes.user'], order: { posted_when: 'DESC' } });
     return userQuotes;
   }
 
-  async findCurrUserQuotes(user:User) {
-    const userQuotes = await this.quotesRepository.find({ where: { user:{id:user.id} }, relations: ['user'], order:{posted_when:"DESC"} });
+  async findUserMostLikedQuotes(userId: number) {
+    const userQuotes = await this.quotesRepository.find({ where: { user: { id: userId } }, relations: ['user', 'votes.user'], order: { karma: 'DESC' } });
+    return userQuotes;
+  }
+
+  async findCurrUserQuotes(user: User) {
+    const userQuotes = await this.quotesRepository.find({ where: { user: { id: user.id } }, relations: ['user'] });
     return userQuotes;
   }
 
   async findById(id: number): Promise<Quote> {
     try {
-      const quote = await this.quotesRepository.findOneOrFail({ where: { id }, relations: ['user', 'votes.quote']});
+      const quote = await this.quotesRepository.findOneOrFail({ where: { id }, relations: ['user', 'votes.quote'] });
       return quote;
     } catch (error) {
-      Logging.error(error)
+      Logging.error(error);
       throw new NotFoundException(`Unable to find a quote with an id of ${id}.`);
     }
   }
 
-  async findRandomQuote():Promise<Quote>{
-    return await this.quotesRepository.createQueryBuilder("quote").innerJoinAndSelect("quote.user", "user").leftJoinAndSelect("quote.votes", "vote").leftJoinAndSelect("vote.user", "user2").orderBy('RANDOM()').getOne()
+  async findRandomQuote(): Promise<Quote> {
+    return await this.quotesRepository
+      .createQueryBuilder('quote')
+      .innerJoinAndSelect('quote.user', 'user')
+      .leftJoinAndSelect('quote.votes', 'vote')
+      .leftJoinAndSelect('vote.user', 'user2')
+      .orderBy('RANDOM()')
+      .getOne();
   }
 
   async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote> {

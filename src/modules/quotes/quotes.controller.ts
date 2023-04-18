@@ -1,15 +1,4 @@
-import { 
-  Controller, 
-  Get, 
-  Post,
-  Body, 
-  Patch, 
-  Param, 
-  Delete, 
-  UseInterceptors,
-  ClassSerializerInterceptor, 
-  UseGuards 
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, UseGuards } from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
@@ -31,6 +20,11 @@ export class QuotesController {
 
   @Get()
   async findQuotes() {
+    return this.quotesService.findAllQuotes();
+  }
+
+  @Get('mostLiked')
+  async findMostLikedQuotes() {
     return this.quotesService.findMostUpvotedQuotes();
   }
 
@@ -45,10 +39,16 @@ export class QuotesController {
     return this.quotesService.findCurrUserQuotes(user);
   }
 
-  @Get('users/:id')
+  @Get('mostLiked/users/:id')
   @UseGuards(JwtAuthGuard)
-  async findAllUserQuotes(@Param('id') userId: number) {
-    return this.quotesService.findUserQuotes(userId);
+  async findAllUserMostLikedQuotes(@Param('id') userId: number){
+    return this.quotesService.findUserMostLikedQuotes(userId);
+  }
+
+  @Get('recent/users/:id')
+  @UseGuards(JwtAuthGuard)
+  async findAllUserMostRecentQuotes(@Param('id') userId: number) {
+    return this.quotesService.findUserMostRecentQuotes(userId);
   }
 
   @Get('random')

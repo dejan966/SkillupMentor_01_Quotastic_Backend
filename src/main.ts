@@ -1,12 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-//import * as cookieparser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './modules/app.module';
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
 
-const express = require('express');
-const path = require('path');
-const cookieparser = require('cookie-parser');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,10 +16,10 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalPipes(new ValidationPipe());
-  app.use(cookieparser());
-  
+  app.use(cookieParser());
+
   const dirname = path.resolve();
-  app.use('/uploads', express.static(path.join(dirname, '/uploads')))
+  app.use('/uploads', express.static(path.join(dirname, '/uploads')));
 
   const config = new DocumentBuilder().setTitle('Quotastic').setDescription('This is the Quotastic app').setVersion('1.0.0').build();
 

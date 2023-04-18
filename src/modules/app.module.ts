@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
@@ -15,7 +15,7 @@ import { configValidationSchema } from 'config/schema.config';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env'],
-      validationSchema: configValidationSchema
+      validationSchema: configValidationSchema,
     }),
     DatabaseModule,
     UsersModule,
