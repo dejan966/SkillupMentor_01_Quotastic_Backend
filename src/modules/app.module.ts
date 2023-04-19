@@ -14,7 +14,7 @@ import { configValidationSchema } from 'config/schema.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env'],
+      envFilePath: [`.env.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
     }),
     DatabaseModule,
